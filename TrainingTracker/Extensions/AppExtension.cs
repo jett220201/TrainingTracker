@@ -1,10 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Application.Interfaces.Repository;
+using TrainingTracker.Application.Services;
 using TrainingTracker.Infrastructure.Persistence;
+using TrainingTracker.Infrastructure.Repository;
 
 namespace TrainingTracker.API.Extensions
 {
     public static class AppExtension
     {
+        public static void RegisterServices(this IServiceCollection services)
+        {
+            #region Repositories
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserProgressesRepository, UserProgressesRepository>();
+            services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
+            services.AddScoped<IWorkoutsRepository, WorkoutsRepository>();
+            services.AddScoped<IWorkoutExercisesAssociationsRepository, WorkoutExercisesAssociationsRepository>();
+            services.AddScoped<IExercisesRepository, ExercisesRepository>();
+            #endregion
+
+            #region Services
+            services.AddScoped<IUserService, UsersService>();
+            services.AddScoped<IUserProgressesService, UserProgressesService>();
+            services.AddScoped<IRefreshTokensService, RefreshTokensService>();
+            services.AddScoped<IWorkoutsService, WorkoutsService>();
+            services.AddScoped<IWorkoutExercisesAssociationsService, WorkoutExercisesAssociationsService>();
+            services.AddScoped<IExercisesService, ExercisesService>();
+            #endregion
+        }
+
         public static void RegisterDataSource(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? configuration.GetConnectionString("DefaultConnection");
