@@ -9,6 +9,6 @@
         Task AddRange(IEnumerable<TEntity> entity);
         Task Update(TEntity entity);
         Task<TEntity> UpdateReturn(TEntity entity);
-        Task<TEntity> Delete(TEntity entity);
+        Task Delete(TEntity entity);
     }
 }

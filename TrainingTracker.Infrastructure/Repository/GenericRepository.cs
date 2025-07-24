@@ -13,44 +13,69 @@ namespace TrainingTracker.Infrastructure.Repository
             _contextFactory = contextFactory;
         }
 
-        public Task Add(TEntity entity)
+        public async Task Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            await contextFactory.Set<TEntity>().AddAsync(entity);
+            await contextFactory.SaveChangesAsync();
         }
 
-        public Task AddRange(IEnumerable<TEntity> entity)
+        public async Task AddRange(IEnumerable<TEntity> entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            await contextFactory.Set<TEntity>().AddRangeAsync(entity);
+            await contextFactory.SaveChangesAsync();
         }
 
-        public Task<TEntity> AddReturn(TEntity entity)
+        public async Task<TEntity> AddReturn(TEntity entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            await contextFactory.Set<TEntity>().AddAsync(entity);
+            await contextFactory.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<TEntity> Delete(TEntity entity)
+        public async Task Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            var existingEntity = await contextFactory.Set<TEntity>().FindAsync(entity);
+
+            if (existingEntity == null) return;
+
+            contextFactory.Set<TEntity>().Remove(entity);
+            await contextFactory.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            return await contextFactory.Set<TEntity>().ToListAsync();
         }
 
-        public Task<TEntity> GetById(int id)
+        public async Task<TEntity> GetById(int id)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            return await contextFactory.Set<TEntity>().FindAsync(id);
         }
 
-        public Task Update(TEntity entity)
+        public async Task Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            var existingEntity = await contextFactory.Set<TEntity>().FindAsync(entity);
+
+            if (existingEntity == null) return;
+
+            contextFactory.Set<TEntity>().Attach(entity);
+            contextFactory.Entry(entity).State = EntityState.Modified;
+            await contextFactory.SaveChangesAsync();
         }
 
-        public Task<TEntity> UpdateReturn(TEntity entity)
+        public async Task<TEntity> UpdateReturn(TEntity entity)
         {
-            throw new NotImplementedException();
+            var contextFactory = await _contextFactory.CreateDbContextAsync();
+            contextFactory.Set<TEntity>().Update(entity);
+            await contextFactory.SaveChangesAsync();
+            return entity;
         }
     }
 }
