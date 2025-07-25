@@ -12,6 +12,12 @@ namespace TrainingTracker.Infrastructure.Repository
         {
             _context = context;
         }
+
+        public Task<RefreshToken> GetByToken(string token)
+        {
+            var context = _context.CreateDbContext();
+            return context.RefreshTokens.AsNoTracking().FirstOrDefaultAsync(rt => rt.Token == token);
+        }
     }
 
 }

@@ -52,5 +52,10 @@ namespace TrainingTracker.Application.Services
         {
             return _refreshTokensRepository.UpdateReturn(entity);
         }
+
+        public Task<RefreshToken> GetByToken(string token)
+        {
+            return _refreshTokensRepository.GetByToken(token);
+        }
     }
 }
