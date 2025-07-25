@@ -4,5 +4,7 @@ namespace TrainingTracker.Application.Interfaces.Repository
 {
     public interface IUsersRepository : IGenericRepository<User>
     {
+        Task<User> AuthenticateAsync(string username, string password);
+        Task<User> GetUserByUserName(string username);
     }
 }

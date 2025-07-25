@@ -12,5 +12,17 @@ namespace TrainingTracker.Infrastructure.Repository
         {
             _context = context;
         }
+
+        public Task<User> AuthenticateAsync(string username, string password)
+        {
+            var context = _context.CreateDbContext();
+            return context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == username && u.PasswordHash == password);
+        }
+
+        public Task<User> GetUserByUserName(string username)
+        {
+            var context = _context.CreateDbContext();
+            return context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == username);
+        }
     }
 }
