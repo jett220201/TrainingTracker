@@ -4,11 +4,11 @@ using TrainingTracker.Domain.Entities.DB;
 
 namespace TrainingTracker.Application.Services
 {
-    public class RefreshTokenService : IRefreshTokensService
+    public class RefreshTokensService : IRefreshTokensService
     {
         private readonly IRefreshTokensRepository _refreshTokensRepository;
         
-        public RefreshTokenService(IRefreshTokensRepository refreshTokensRepository)
+        public RefreshTokensService(IRefreshTokensRepository refreshTokensRepository)
         {
             _refreshTokensRepository = refreshTokensRepository ?? throw new ArgumentNullException(nameof(refreshTokensRepository));
         }
