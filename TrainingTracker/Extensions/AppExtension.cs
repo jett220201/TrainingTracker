@@ -4,6 +4,8 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Services;
 using TrainingTracker.Infrastructure.Persistence;
 using TrainingTracker.Infrastructure.Repository;
+using TrainingTracker.Application.Interfaces.Helpers;
+using TrainingTracker.Infrastructure.Helpers;
 
 namespace TrainingTracker.API.Extensions
 {
@@ -27,6 +29,10 @@ namespace TrainingTracker.API.Extensions
             services.AddScoped<IWorkoutsService, WorkoutsService>();
             services.AddScoped<IWorkoutExercisesAssociationsService, WorkoutExercisesAssociationsService>();
             services.AddScoped<IExercisesService, ExercisesService>();
+            #endregion
+
+            #region Helpers
+            services.AddTransient<ISecurityHelper, SecurityHelper>();
             #endregion
         }
 
