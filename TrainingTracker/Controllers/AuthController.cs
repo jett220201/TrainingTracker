@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TrainingTracker.Application.DTOs;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
@@ -26,7 +27,7 @@ namespace TrainingTracker.API.Controllers
         #region Methods
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
             if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
@@ -81,6 +82,27 @@ namespace TrainingTracker.API.Controllers
             return Ok(new { Token = newToken, RefreshToken = newRefreshToken });
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest("Refresh token is required.");
+            }
+
+            var existingToken = await _refreshTokensService.GetByToken(refreshToken);
+            if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
+            {
+                return Unauthorized("Invalid or expired refresh token.");
+            }
+
+            // Revoke the refresh token
+            existingToken.RevokedAt = DateTime.UtcNow;
+            await _refreshTokensService.Update(existingToken);
+
+            return Ok("Logged out successfully.");
+        }
+
         private async Task<string> CreateRefreshToken(User user)
         {
             var token = _securityHelper.GenerateRefreshToken(user);
@@ -93,14 +115,6 @@ namespace TrainingTracker.API.Controllers
             };
             await _refreshTokensService.Add(refreshToken);
             return token;
-        }
-        #endregion
-
-        #region Classes
-        public class LoginRequest
-        {
-            public string? Username { get; set; }
-            public string? Password { get; set; }
         }
         #endregion
     }
