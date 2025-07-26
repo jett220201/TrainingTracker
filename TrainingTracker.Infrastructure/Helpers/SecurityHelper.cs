@@ -30,7 +30,7 @@ namespace TrainingTracker.Infrastructure.Helpers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
