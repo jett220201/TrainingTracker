@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using TrainingTracker.Application.DTOs.General;
 using TrainingTracker.Application.DTOs.Login;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
@@ -15,7 +17,7 @@ namespace TrainingTracker.API.Controllers
         private readonly IRefreshTokensService _refreshTokensService;
         private readonly ISecurityHelper _securityHelper;
 
-        public AuthController(IConfiguration configuration, IUserService userService, 
+        public AuthController(IConfiguration configuration, IUserService userService,
             IRefreshTokensService refreshTokensService, ISecurityHelper securityHelper)
         {
             _configuration = configuration;
@@ -27,32 +29,41 @@ namespace TrainingTracker.API.Controllers
         #region Methods
 
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "User login", Description = "Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes.")]
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
-            if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            if(!ModelState.IsValid)
             {
-                return BadRequest("Invalid login request.");
+                return BadRequest(new ErrorResponseDto
+                {
+                    Message = "Validation failed.",
+                    Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
             }
             
             var user = await _userService.GetUserByUserName(request.Username);
 
-            if (user == null) return Unauthorized("Invalid username or password.");
+            if (user == null) return Unauthorized(new ErrorResponseDto { Message = "Invalid username or password.", StatusCode = StatusCodes.Status401Unauthorized });
 
             if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
-                return Unauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
+                return Unauthorized(new ErrorResponseDto { Message = $"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}", StatusCode = StatusCodes.Status401Unauthorized });
 
             if (!_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
             {
                 user.FailedLoginAttempts++;
 
-                if(user.FailedLoginAttempts >= 3)
+                if(user.FailedLoginAttempts >= Convert.ToInt32(_configuration["SecuritySettings:MaxFailedAccessAttempts"]))
                 {
-                    user.LockOutEnd = DateTime.UtcNow.AddMinutes(15);
+                    user.LockOutEnd = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["SecuritySettings:DefaultLockoutTimeSpanMinutes"]));
                 }
 
                 await _userService.Update(user);
 
-                return Unauthorized("Invalid username or password.");
+                return Unauthorized(new ErrorResponseDto { Message = "Invalid username or password.", StatusCode = StatusCodes.Status401Unauthorized });
             }
 
             user.FailedLoginAttempts = 0;
@@ -65,27 +76,36 @@ namespace TrainingTracker.API.Controllers
             // Create refresh token
             var refreshToken = await CreateRefreshToken(user);
 
-            return Ok(new { Token = token, RefreshToken = refreshToken });
+            return Ok(new LoginResponseDto{ Token = token, RefreshToken = refreshToken });
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refresh the JWT token using a valid refresh token")]
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
         {
-            if (string.IsNullOrEmpty(refreshToken))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Refresh token is required.");
+                return BadRequest(new ErrorResponseDto
+                {
+                    Message = "Validation failed.",
+                    Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
             }
 
-            var existingToken = await _refreshTokensService.GetByToken(refreshToken);
+            var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
-                return Unauthorized("Invalid or expired refresh token.");
+                return Unauthorized(new ErrorResponseDto { Message = "Invalid or expired refresh token.", StatusCode = StatusCodes.Status401Unauthorized });
             }
 
             var user = await _userService.GetById(existingToken.UserId);
             if (user == null)
             {
-                return Unauthorized("User not found.");
+                return Unauthorized(new ErrorResponseDto { Message = "User not found.", StatusCode = StatusCodes.Status401Unauthorized });
             }
 
             // Revoke the old refresh token
@@ -98,28 +118,37 @@ namespace TrainingTracker.API.Controllers
             // Generate a new refresh token
             var newRefreshToken = await CreateRefreshToken(user);
 
-            return Ok(new { Token = newToken, RefreshToken = newRefreshToken });
+            return Ok(new LoginResponseDto{ Token = newToken, RefreshToken = newRefreshToken });
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] string refreshToken)
+        [SwaggerOperation(Summary = "Logout", Description = "Revoke the refresh token to log out the user")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto request)
         {
-            if (string.IsNullOrEmpty(refreshToken))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Refresh token is required.");
+                return BadRequest(new ErrorResponseDto
+                {
+                    Message = "Validation failed.",
+                    Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
             }
 
-            var existingToken = await _refreshTokensService.GetByToken(refreshToken);
+            var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
-                return Unauthorized("Invalid or expired refresh token.");
+                return Unauthorized(new ErrorResponseDto { Message = "Invalid or expired refresh token.", StatusCode = StatusCodes.Status401Unauthorized });
             }
 
             // Revoke the refresh token
             existingToken.RevokedAt = DateTime.UtcNow;
             await _refreshTokensService.Update(existingToken);
 
-            return Ok("Logged out successfully.");
+            return Ok(new ApiResponseDto { Message = "Logged out successfully." });
         }
 
         private async Task<string> CreateRefreshToken(User user)
