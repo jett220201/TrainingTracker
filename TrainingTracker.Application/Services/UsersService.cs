@@ -78,11 +78,11 @@ namespace TrainingTracker.Application.Services
             var existingUserByEmail = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
             if (existingUserByName != null)
             {
-                throw new Exception("Username already exists. Please choose a different username.");
+                throw new ArgumentException("Username already exists. Please choose a different username.");
             }
             if (existingUserByEmail != null)
             {
-                throw new Exception("A user with the same email already exists. Please choose a different email.");
+                throw new ArgumentException("A user with the same email already exists. Please choose a different email.");
             }
 
             User user = new User
@@ -97,6 +97,41 @@ namespace TrainingTracker.Application.Services
 
             await Add(user);
             return user;
+        }
+
+        public async Task ChangePassword(UserChangePasswordRequestDto request)
+        {
+            var user = await GetUserByUserName(request.Username.Trim().ToLowerInvariant());
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.");
+            }
+            if (!_securityHelper.VerifyPassword(request.OldPassword, user.PasswordHash ?? ""))
+            {
+                throw new ArgumentException("Old password is incorrect.");
+            }
+            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword);
+            await Update(user);
+        }
+
+        public Task RecoverPassword(UserRecoverPasswordRequestDto request)
+        {
+            // TODO: Add email sending logic here
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteAccount(UserDeleteAccountRequestDto request)
+        {
+            var user = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.");
+            }
+            if (!_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
+            {
+                throw new ArgumentException("Old password is incorrect.");
+            }
+            await Delete(user);
         }
     }
 }

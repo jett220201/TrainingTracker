@@ -44,7 +44,7 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                // TODO: Implement the change password logic in the IUserService
+                await _userService.ChangePassword(request);
                 return Ok(new { message = "Password changed successfully." });
             }
             catch (ValidationException ex)
@@ -63,7 +63,7 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                // TODO: Implement the password recovery logic in the IUserService
+                await _userService.RecoverPassword(request);
                 return Ok(new { message = "Password recovery email sent successfully." });
             }
             catch (ValidationException ex)
@@ -82,7 +82,7 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                // TODO: Implement the delete account logic in the IUserService
+                await _userService.DeleteAccount(request);
                 return Ok(new { message = "Account deleted successfully." });
             }
             catch (ValidationException ex)
