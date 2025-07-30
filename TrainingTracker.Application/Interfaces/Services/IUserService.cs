@@ -1,4 +1,4 @@
-﻿using TrainingTracker.Application.DTOs;
+﻿using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Domain.Entities.DB;
 
 namespace TrainingTracker.Application.Interfaces.Services

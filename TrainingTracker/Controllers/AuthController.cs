@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrainingTracker.Application.DTOs;
+using TrainingTracker.Application.DTOs.Login;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
@@ -33,12 +33,31 @@ namespace TrainingTracker.API.Controllers
             {
                 return BadRequest("Invalid login request.");
             }
-
+            
             var user = await _userService.GetUserByUserName(request.Username);
-            if (user == null || !_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
+
+            if (user == null) return Unauthorized("Invalid username or password.");
+
+            if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
+                return Unauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
+
+            if (!_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
             {
+                user.FailedLoginAttempts++;
+
+                if(user.FailedLoginAttempts >= 3)
+                {
+                    user.LockOutEnd = DateTime.UtcNow.AddMinutes(15);
+                }
+
+                await _userService.Update(user);
+
                 return Unauthorized("Invalid username or password.");
             }
+
+            user.FailedLoginAttempts = 0;
+            user.LockOutEnd = null;
+            await _userService.Update(user);
 
             // Generate JWT token
             var token = _securityHelper.GenerateJwtToken(user, _configuration);

@@ -43,6 +43,8 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 entity.Property(e => e.Email).HasColumnName("email");
+                entity.Property(e => e.FailedLoginAttempts).HasColumnName("failed_login_attempts");
+                entity.Property(e => e.LockOutEnd).HasColumnName("lock_out_end");
                 // Relations
                 entity.HasMany(e => e.UserProgresses).WithOne(up => up.User).HasForeignKey(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.Workouts).WithOne(w => w.User).HasForeignKey(w => w.UserId).OnDelete(DeleteBehavior.Cascade);

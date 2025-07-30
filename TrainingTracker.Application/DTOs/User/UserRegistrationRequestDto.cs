@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingTracker.Application.DTOs
+namespace TrainingTracker.Application.DTOs.User
 {
     public class UserRegistrationRequestDto
     {

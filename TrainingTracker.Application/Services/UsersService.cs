@@ -1,4 +1,4 @@
-﻿using TrainingTracker.Application.DTOs;
+﻿using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
@@ -90,7 +90,9 @@ namespace TrainingTracker.Application.Services
                 Username = request.Username.Trim().ToLowerInvariant(),
                 PasswordHash = _securityHelper.HashPassword(request.Password),
                 Email = request.Email.Trim().ToLowerInvariant(),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                FailedLoginAttempts = 0,
+                LockOutEnd = null
             };
 
             await Add(user);

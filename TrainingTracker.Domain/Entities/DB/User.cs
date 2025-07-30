@@ -13,6 +13,8 @@ namespace TrainingTracker.Domain.Entities.DB
         public string PasswordHash { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
+        public int FailedLoginAttempts { get; set; }
+        public DateTime? LockOutEnd { get; set; }
 
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
