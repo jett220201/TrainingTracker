@@ -1,4 +1,5 @@
-﻿using TrainingTracker.Application.Interfaces.Repository;
+﻿using TrainingTracker.Application.DTOs.UserProgress;
+using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 
@@ -51,6 +52,18 @@ namespace TrainingTracker.Application.Services
         public Task<UserProgress> UpdateReturn(UserProgress entity)
         {
             return _userProgressesRepository.UpdateReturn(entity);
+        }
+
+        public Task AddNewUserProgress(UserProgressDto userProgress)
+        {
+            var newUserProgress = new UserProgress
+            {
+                UserId = userProgress.UserId,
+                BodyFatPercentage = userProgress.BodyFatPercentage,
+                Weight = userProgress.Weight,
+                CreatedAt = DateTime.UtcNow
+            };
+            return _userProgressesRepository.Add(newUserProgress);
         }
     }
 }
