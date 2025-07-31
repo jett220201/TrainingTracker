@@ -10,7 +10,7 @@ namespace TrainingTracker.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
 
@@ -27,26 +27,21 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequestDto request)
         {
-            if (!ModelState.IsValid) return BadRequest(new ErrorResponseDto
-            {
-                Message = "Validation failed.",
-                Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
-                StatusCode = StatusCodes.Status400BadRequest
-            });
+            if (!ModelState.IsValid) return HandleInvalidModelState();
 
             try
             {
                 await _userService.Register(request);
 
-                return Ok(new ApiResponseDto{ Message = "User registered successfully." });
+                return HandleSuccess("User registered successfully.");
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto { Message = ex.Message, StatusCode = StatusCodes.Status400BadRequest });
+                return HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponseDto { Message = "An error occurred while registering the user.", Details = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+                return HandleException(ex, "An error occurred while registering the user.");
             }
         }
 
@@ -58,25 +53,20 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ChangePassword([FromBody] UserChangePasswordRequestDto request)
         {
-            if (!ModelState.IsValid) return BadRequest(new ErrorResponseDto
-            {
-                Message = "Validation failed.",
-                Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
-                StatusCode = StatusCodes.Status400BadRequest
-            });
+            if (!ModelState.IsValid) return HandleInvalidModelState();
 
             try
             {
                 await _userService.ChangePassword(request);
-                return Ok(new ApiResponseDto{ Message = "Password changed successfully." });
+                return HandleSuccess("Password changed successfully.");
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto { Message = ex.Message, StatusCode = StatusCodes.Status400BadRequest });
+                return HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponseDto { Message = "An error occurred while changing the password.", Details = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+                return HandleException(ex, "An error occurred while changing the password.");
             }
         }
 
@@ -88,25 +78,20 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RecoverPassword([FromBody] UserRecoverPasswordRequestDto request)
         {
-            if (!ModelState.IsValid) return BadRequest(new ErrorResponseDto
-            {
-                Message = "Validation failed.",
-                Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
-                StatusCode = StatusCodes.Status400BadRequest
-            });
+            if (!ModelState.IsValid) return HandleInvalidModelState();
 
             try
             {
                 await _userService.RecoverPassword(request);
-                return Ok(new ApiResponseDto{ Message = "Password recovery email sent successfully." });
+                return HandleSuccess("Password recovery email sent successfully.");
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto { Message = ex.Message, StatusCode = StatusCodes.Status400BadRequest });
+                return HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponseDto { Message = "An error occurred while recovering the password.", Details = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+                return HandleException(ex, "An error occurred while recovering the password.");
             }
         }
 
@@ -118,25 +103,20 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteAccount([FromBody] UserDeleteAccountRequestDto request)
         {
-            if (!ModelState.IsValid) return BadRequest(new ErrorResponseDto
-            {
-                Message = "Validation failed.",
-                Details = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)),
-                StatusCode = StatusCodes.Status400BadRequest
-            });
+            if (!ModelState.IsValid) return HandleInvalidModelState();
 
             try
             {
                 await _userService.DeleteAccount(request);
-                return Ok(new ApiResponseDto { Message = "Account deleted successfully." });
+                return HandleSuccess("Account deleted successfully.");
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto { Message = ex.Message, StatusCode = StatusCodes.Status400BadRequest });
+                return HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponseDto { Message = "An error occurred while deleting the account.", Details = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+                return HandleException(ex, "An error occurred while deleting the account.");
             }
         }
     }
