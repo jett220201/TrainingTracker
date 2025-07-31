@@ -1,3 +1,4 @@
+using log4net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -36,6 +37,9 @@ builder.Services.AddAuthorization();
 
 builder.Services.RegisterServices();
 builder.Services.RegisterDataSource(builder.Configuration);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddLog4Net("log4net.config");
 
 var app = builder.Build();
 
