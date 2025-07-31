@@ -90,6 +90,8 @@ namespace TrainingTracker.Application.Services
                 Username = request.Username.Trim().ToLowerInvariant(),
                 PasswordHash = _securityHelper.HashPassword(request.Password),
                 Email = request.Email.Trim().ToLowerInvariant(),
+                Name = request.Name.Trim(),
+                LastName = request.LastName.Trim(),
                 CreatedAt = DateTime.UtcNow,
                 FailedLoginAttempts = 0,
                 LockOutEnd = null

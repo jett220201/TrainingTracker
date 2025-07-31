@@ -41,6 +41,8 @@ namespace TrainingTracker.Infrastructure.Persistence
                 // Columns
                 entity.Property(e => e.Username).HasColumnName("username");
                 entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
+                entity.Property(e => e.Name).HasColumnName("name");
+                entity.Property(e => e.LastName).HasColumnName("last_name");
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 entity.Property(e => e.Email).HasColumnName("email");
                 entity.Property(e => e.FailedLoginAttempts).HasColumnName("failed_login_attempts");
@@ -49,7 +51,11 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.HasMany(e => e.UserProgresses).WithOne(up => up.User).HasForeignKey(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.Workouts).WithOne(w => w.User).HasForeignKey(w => w.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.RefreshTokens).WithOne(rt => rt.User).HasForeignKey(rt => rt.UserId).OnDelete(DeleteBehavior.Cascade);
+                // Indexes
+                entity.HasIndex(e => e.Username).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
             });
+
             modelBuilder.Entity<UserProgress>(entity =>
             {
                 // Primary Key
@@ -61,6 +67,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 // Relations
             });
+
             modelBuilder.Entity<RefreshToken>(entity =>
             {
                 // Primary Key
@@ -73,6 +80,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.RevokedAt).HasColumnName("revoked_at");
                 // Relations
             });
+
             modelBuilder.Entity<Workout>(entity =>
             {
                 // Primary Key
@@ -84,6 +92,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 // Relations
                 entity.HasMany(e => e.WorkoutExercises).WithOne(wea => wea.Workout).HasForeignKey(wea => wea.WorkoutId).OnDelete(DeleteBehavior.Cascade);
             });
+
             modelBuilder.Entity<Exercise>(entity =>
             {
                 // Primary Key
@@ -94,7 +103,10 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.MuscleGroup).HasColumnName("muscle_group");
                 // Relations
                 entity.HasMany(e => e.WorkoutExercisesAssociations).WithOne(wea => wea.Exercise).HasForeignKey(wea => wea.ExerciseId);
+                // Indexes
+                entity.HasIndex(e => e.Name).IsUnique();
             });
+
             modelBuilder.Entity<WorkoutExercisesAssociation>(entity =>
             {
                 // Primary Key
