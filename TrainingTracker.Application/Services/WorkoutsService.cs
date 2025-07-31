@@ -1,4 +1,6 @@
-﻿using TrainingTracker.Application.Interfaces.Repository;
+﻿using System.ComponentModel.DataAnnotations;
+using TrainingTracker.Application.DTOs.Workout;
+using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 
@@ -7,10 +9,17 @@ namespace TrainingTracker.Application.Services
     public class WorkoutsService : IWorkoutsService
     {
         private readonly IWorkoutsRepository _workoutsRepository;
-        
-        public WorkoutsService(IWorkoutsRepository workoutsRepository)
+        private readonly IWorkoutExercisesAssociationsService _workoutExercisesAssociationsService;
+        private readonly IExercisesService _exercisesService;
+        private readonly IUserService _usersService;
+
+        public WorkoutsService(IWorkoutsRepository workoutsRepository, IWorkoutExercisesAssociationsService workoutExercisesAssociationsService, 
+            IExercisesService exercisesService, IUserService usersService)
         {
             _workoutsRepository = workoutsRepository ?? throw new ArgumentNullException(nameof(workoutsRepository));
+            _workoutExercisesAssociationsService = workoutExercisesAssociationsService ?? throw new ArgumentNullException(nameof(workoutExercisesAssociationsService));
+            _exercisesService = exercisesService;
+            _usersService = usersService;
         }
 
         public Task Add(Workout entity)
@@ -51,6 +60,44 @@ namespace TrainingTracker.Application.Services
         public Task<Workout> UpdateReturn(Workout entity)
         {
             return _workoutsRepository.UpdateReturn(entity);
+        }
+
+        public async Task AddNewWorkout(WorkoutDto workout)
+        {
+            if(_usersService.GetById(workout.UserId) == null)
+            {
+                throw new ValidationException($"User with ID {workout.UserId} does not exist.");
+            }
+
+            var exercises = await _exercisesService.GetAll();
+
+            if(!exercises.Any(e => workout.ExercisesAssociation.Any(we => we.ExerciseId == e.Id)))
+            {
+                throw new ValidationException("One or more exercises in the workout do not exist.");
+            }
+
+            var newWorkout = new Workout
+            {
+                UserId = workout.UserId,
+                Name = workout.Name,
+                Schedule = workout.Schedule,
+            };
+            newWorkout = await _workoutsRepository.AddReturn(newWorkout);
+
+            if (workout.ExercisesAssociation != null && workout.ExercisesAssociation.Any())
+            {
+                var associations = workout.ExercisesAssociation
+                    .Select(e => new WorkoutExercisesAssociation
+                    {
+                        WorkoutId = newWorkout.Id,
+                        ExerciseId = e.ExerciseId,
+                        Sets = e.Sets,
+                        Repetitions = e.Repetitions,
+                        Weight = e.Weight
+                    }).ToList();
+
+                await _workoutExercisesAssociationsService.AddRange(associations);
+            }
         }
     }
 }
