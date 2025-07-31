@@ -56,7 +56,7 @@ namespace TrainingTracker.Application.Services
             return _exercisesRepository.UpdateReturn(entity);
         }
 
-        public async Task<Task> AddNewExercise(ExerciseDto exercise)
+        public async Task AddNewExercise(ExerciseDto exercise)
         {
             if (exercise == null) throw new ArgumentNullException(nameof(exercise));
             if (await ExerciseExists(exercise.Name, (MuscleGroup)exercise.MuscleGroup))
@@ -69,7 +69,7 @@ namespace TrainingTracker.Application.Services
                 Description = exercise.Description,
                 MuscleGroup = (MuscleGroup)exercise.MuscleGroup
             };
-            return _exercisesRepository.Add(newExercise);
+            await _exercisesRepository.Add(newExercise);
         }
 
         private async Task<bool> ExerciseExists(string name, MuscleGroup muscleGroup)
