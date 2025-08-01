@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.General;
@@ -45,6 +46,7 @@ namespace TrainingTracker.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("change-password")]
         [SwaggerOperation(Summary = "Change Password", Description = "Change the password of the authenticated user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -95,6 +97,7 @@ namespace TrainingTracker.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("delete")]
         [SwaggerOperation(Summary = "Delete Account", Description = "Delete the authenticated user's account")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

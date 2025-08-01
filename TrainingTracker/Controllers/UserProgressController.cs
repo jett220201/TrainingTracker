@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TrainingTracker.Application.DTOs.General;
 using TrainingTracker.Application.DTOs.UserProgress;
@@ -16,6 +17,7 @@ namespace TrainingTracker.API.Controllers
             _userProgressService = userProgressService;
         }
 
+        [Authorize]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new user progress", Description = "Add a new registry with details of the user progress")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.General;
@@ -17,6 +18,7 @@ namespace TrainingTracker.API.Controllers
             _workoutsService = workoutsService;
         }
 
+        [Authorize]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new workout", Description = "Add a new workout to the system")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

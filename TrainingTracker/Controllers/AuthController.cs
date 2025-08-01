@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TrainingTracker.Application.DTOs.General;
 using TrainingTracker.Application.DTOs.Login;
@@ -35,45 +36,52 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return HandleInvalidModelState();
             }
-            
-            var user = await _userService.GetUserByUserName(request.Username);
 
-            if (user == null) return HandleUnauthorized("Invalid username or password.");
-
-            if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
-                return HandleUnauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
-
-            if (!_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
+            try
             {
-                user.FailedLoginAttempts++;
+                var user = await _userService.GetUserByUserName(request.Username ?? "");
 
-                if(user.FailedLoginAttempts >= Convert.ToInt32(_configuration["SecuritySettings:MaxFailedAccessAttempts"]))
+                if (user == null) return HandleUnauthorized("Invalid username or password.");
+
+                if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
+                    return HandleUnauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
+
+                if (!_securityHelper.VerifyPassword(request.Password ?? "", user.PasswordHash ?? ""))
                 {
-                    user.LockOutEnd = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["SecuritySettings:DefaultLockoutTimeSpanMinutes"]));
+                    user.FailedLoginAttempts++;
+
+                    if (user.FailedLoginAttempts >= Convert.ToInt32(_configuration["SecuritySettings:MaxFailedAccessAttempts"]))
+                    {
+                        user.LockOutEnd = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["SecuritySettings:DefaultLockoutTimeSpanMinutes"]));
+                    }
+
+                    await _userService.Update(user);
+
+                    return HandleUnauthorized("Invalid username or password.");
                 }
 
+                user.FailedLoginAttempts = 0;
+                user.LockOutEnd = null;
                 await _userService.Update(user);
 
-                return HandleUnauthorized("Invalid username or password.");
+                // Generate JWT token
+                var token = _securityHelper.GenerateJwtToken(user, _configuration);
+
+                // Create refresh token
+                var refreshToken = await CreateRefreshToken(user);
+                return Ok(new LoginResponseDto { Token = token, RefreshToken = refreshToken });
             }
-
-            user.FailedLoginAttempts = 0;
-            user.LockOutEnd = null;
-            await _userService.Update(user);
-
-            // Generate JWT token
-            var token = _securityHelper.GenerateJwtToken(user, _configuration);
-
-            // Create refresh token
-            var refreshToken = await CreateRefreshToken(user);
-
-            return Ok(new LoginResponseDto{ Token = token, RefreshToken = refreshToken });
+            catch (Exception ex)
+            {
+                return HandleException(ex, "An error occurred while logging in.");
+            }
         }
 
+        [Authorize]
         [HttpPost("refresh")]
         [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refresh the JWT token using a valid refresh token")]
         [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
@@ -104,10 +112,10 @@ namespace TrainingTracker.API.Controllers
 
             // Generate a new refresh token
             var newRefreshToken = await CreateRefreshToken(user);
-
             return Ok(new LoginResponseDto{ Token = newToken, RefreshToken = newRefreshToken });
         }
 
+        [Authorize]
         [HttpPost("logout")]
         [SwaggerOperation(Summary = "Logout", Description = "Revoke the refresh token to log out the user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -126,7 +134,6 @@ namespace TrainingTracker.API.Controllers
             // Revoke the refresh token
             existingToken.RevokedAt = DateTime.UtcNow;
             await _refreshTokensService.Update(existingToken);
-
             return HandleSuccess("Logged out successfully.");
         }
 
