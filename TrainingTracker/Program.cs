@@ -1,6 +1,6 @@
-using log4net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using TrainingTracker.API.Extensions;
 
@@ -19,7 +19,29 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API for managing training workouts, exercises and progress.",
     });
+
     options.EnableAnnotations();
+
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -52,10 +74,12 @@ builder.Logging.AddLog4Net("log4net.config");
 
 var app = builder.Build();
 
-app.UseSwagger();
-
-app.UseSwaggerUI();
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+    
 app.UseCors();
 
 app.UseHttpsRedirection();
