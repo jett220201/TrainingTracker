@@ -61,12 +61,17 @@ namespace TrainingTracker.Infrastructure.Repository
         public async Task Update(TEntity entity)
         {
             var contextFactory = await _contextFactory.CreateDbContextAsync();
-            var existingEntity = await contextFactory.Set<TEntity>().FindAsync(entity);
+            var keyProperty = typeof(TEntity).GetProperty("Id");
+            if (keyProperty == null)
+                throw new InvalidOperationException("Entity does not have an Id property.");
+
+            var keyValue = keyProperty.GetValue(entity);
+            var existingEntity = await contextFactory.Set<TEntity>().FindAsync(keyValue);
 
             if (existingEntity == null) return;
 
-            contextFactory.Set<TEntity>().Attach(entity);
-            contextFactory.Entry(entity).State = EntityState.Modified;
+            contextFactory.Entry(existingEntity).CurrentValues.SetValues(entity);
+
             await contextFactory.SaveChangesAsync();
         }
 
