@@ -14,6 +14,6 @@ namespace TrainingTracker.Domain.Entities.DB
         public decimal Weight { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public virtual User User { get; set; } = new User();
+        public virtual User User { get; set; }
     }
 }

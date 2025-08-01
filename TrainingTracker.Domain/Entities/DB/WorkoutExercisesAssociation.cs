@@ -15,7 +15,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public int Sets { get; set; }
         public decimal Weight { get; set; }
 
-        public virtual Workout Workout { get; set; } = new Workout();
-        public virtual Exercise Exercise { get; set; } = new Exercise();
+        public virtual Workout Workout { get; set; }
+        public virtual Exercise Exercise { get; set; }
     }
 }

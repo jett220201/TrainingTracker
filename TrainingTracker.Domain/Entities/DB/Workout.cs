@@ -13,7 +13,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public DateTime Schedule { get; set; }
         public int UserId { get; set; }
 
-        public virtual User User { get; set; } = new User();
+        public virtual User User { get; set; }
         public virtual ICollection<WorkoutExercisesAssociation> WorkoutExercises { get; set; } = new List<WorkoutExercisesAssociation>();
     }
 }
