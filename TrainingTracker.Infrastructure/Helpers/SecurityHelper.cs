@@ -12,6 +12,10 @@ namespace TrainingTracker.Infrastructure.Helpers
     {
         public string HashPassword(string password)
         {
+            if (string.IsNullOrEmpty(password))
+            {
+                return ""; // No password received, cannot continue
+            }
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 

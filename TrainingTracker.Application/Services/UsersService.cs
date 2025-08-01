@@ -108,9 +108,13 @@ namespace TrainingTracker.Application.Services
             {
                 throw new ArgumentException("User not found.");
             }
-            if (!_securityHelper.VerifyPassword(request.OldPassword, user.PasswordHash ?? ""))
+            if (!_securityHelper.VerifyPassword(request.OldPassword ?? "", user.PasswordHash ?? ""))
             {
-                throw new ArgumentException("Old password is incorrect.");
+                throw new UnauthorizedAccessException("Old password is incorrect.");
+            }
+            if (_securityHelper.VerifyPassword(request.NewPassword ?? "", user.PasswordHash ?? ""))
+            {
+                throw new ArgumentException("The new password must be different from the old password.");
             }
             user.PasswordHash = _securityHelper.HashPassword(request.NewPassword);
             await Update(user);
