@@ -59,7 +59,7 @@ namespace TrainingTracker.Application.Services
         public async Task AddNewExercise(ExerciseDto exercise)
         {
             if (exercise == null) throw new ArgumentNullException(nameof(exercise));
-            if (await ExerciseExists(exercise.Name, (MuscleGroup)exercise.MuscleGroup))
+            if (await ExerciseExists(exercise.Name.ToLower(), (MuscleGroup)exercise.MuscleGroup))
             {
                 throw new ValidationException($"An exercise with the name '{exercise.Name}' and muscle group '{Enum.GetName(typeof(MuscleGroup), exercise.MuscleGroup)}' already exists.");
             }

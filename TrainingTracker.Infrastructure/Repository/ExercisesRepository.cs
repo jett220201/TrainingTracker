@@ -19,7 +19,7 @@ namespace TrainingTracker.Infrastructure.Repository
                 throw new ArgumentException("Name cannot be null or empty.", nameof(name));
             var context = _context.CreateDbContext();
             return context.Exercises.AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(e => e.Name.ToLower() == name);
         }
     }
 }
