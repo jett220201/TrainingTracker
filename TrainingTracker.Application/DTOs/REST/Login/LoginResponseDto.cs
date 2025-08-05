@@ -1,4 +1,4 @@
-﻿namespace TrainingTracker.Application.DTOs.Login
+﻿namespace TrainingTracker.Application.DTOs.REST.Login
 {
     public class LoginResponseDto
     {

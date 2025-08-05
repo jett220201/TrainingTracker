@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TrainingTracker.Application.DTOs.General;
-using TrainingTracker.Application.DTOs.UserProgress;
+using TrainingTracker.Application.DTOs.REST.General;
+using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Application.Interfaces.Services;
 
 namespace TrainingTracker.API.Controllers

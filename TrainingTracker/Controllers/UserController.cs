@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
-using TrainingTracker.Application.DTOs.General;
+using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;

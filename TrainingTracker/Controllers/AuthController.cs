@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TrainingTracker.Application.DTOs.General;
-using TrainingTracker.Application.DTOs.Login;
+using TrainingTracker.Application.DTOs.REST.General;
+using TrainingTracker.Application.DTOs.REST.Login;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;

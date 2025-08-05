@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingTracker.Application.DTOs.Workout
+namespace TrainingTracker.Application.DTOs.REST.Workout
 {
     public class WorkoutDto : IValidatableObject
     {

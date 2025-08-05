@@ -1,4 +1,4 @@
-﻿namespace TrainingTracker.Application.DTOs.General
+﻿namespace TrainingTracker.Application.DTOs.REST.General
 {
     public class ApiResponseDto
     {

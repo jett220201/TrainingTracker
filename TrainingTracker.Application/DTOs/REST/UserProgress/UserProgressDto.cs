@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingTracker.Application.DTOs.UserProgress
+namespace TrainingTracker.Application.DTOs.REST.UserProgress
 {
     public class UserProgressDto
     {

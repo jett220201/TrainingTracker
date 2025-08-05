@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
-using TrainingTracker.Application.DTOs.General;
-using TrainingTracker.Application.DTOs.Workout;
+using TrainingTracker.Application.DTOs.REST.General;
+using TrainingTracker.Application.DTOs.REST.Workout;
 using TrainingTracker.Application.Interfaces.Services;
 
 namespace TrainingTracker.API.Controllers

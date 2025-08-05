@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingTracker.Application.DTOs.Login
+namespace TrainingTracker.Application.DTOs.REST.Login
 {
     public class LoginRequestDto
     {

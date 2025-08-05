@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrainingTracker.Application.DTOs.General;
+using TrainingTracker.Application.DTOs.REST.General;
 
 namespace TrainingTracker.API.Controllers
 {

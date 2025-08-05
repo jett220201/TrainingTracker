@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrainingTracker.Application.DTOs.Exercise
+namespace TrainingTracker.Application.DTOs.REST.Exercise
 {
     public class ExerciseDto
     {
