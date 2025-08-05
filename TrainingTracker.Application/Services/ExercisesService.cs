@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TrainingTracker.Application.DTOs.Exercise;
+using TrainingTracker.Application.DTOs.REST.Exercise;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;

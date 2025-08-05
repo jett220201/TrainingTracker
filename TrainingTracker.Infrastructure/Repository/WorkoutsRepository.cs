@@ -12,5 +12,15 @@ namespace TrainingTracker.Infrastructure.Repository
         {
             _context = context;
         }
+
+        public async Task<List<Workout>> GetWorkoutsByUser(int idUser)
+        {
+            var context = await _context.CreateDbContextAsync();
+            return await context.Workouts
+                .Where(w => w.UserId == idUser)
+                .Include(w => w.WorkoutExercises)
+                .ThenInclude(wea => wea.Exercise)
+                .ToListAsync();
+        }
     }
 }

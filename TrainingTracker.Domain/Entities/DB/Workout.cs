@@ -12,7 +12,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public string Name { get; set; } = string.Empty;
         public int UserId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
         public virtual ICollection<WorkoutExercisesAssociation> WorkoutExercises { get; set; } = new List<WorkoutExercisesAssociation>();
     }
 }

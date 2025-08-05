@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using TrainingTracker.Domain.Entities.ENUM;
 
 namespace TrainingTracker.Domain.Entities.DB
@@ -14,6 +15,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public string Description { get; set; } = string.Empty;
         public MuscleGroup MuscleGroup { get; set; }
 
+        [JsonIgnore]
         public ICollection<WorkoutExercisesAssociation> WorkoutExercisesAssociations { get; set; } = new List<WorkoutExercisesAssociation>();
     }
 }

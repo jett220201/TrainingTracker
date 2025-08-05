@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TrainingTracker.Application.DTOs.Workout;
+using TrainingTracker.Application.DTOs.GraphQL.Exercise;
+using TrainingTracker.Application.DTOs.GraphQL.Workout;
+using TrainingTracker.Application.DTOs.REST.Workout;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
+using TrainingTracker.Domain.Entities.ENUM;
 
 namespace TrainingTracker.Application.Services
 {
@@ -97,6 +100,31 @@ namespace TrainingTracker.Application.Services
 
                 await _workoutExercisesAssociationsService.AddRange(associations);
             }
+        }
+
+        public async Task<List<WorkoutGraphQLDto>> GetWorkoutsByUser(int idUser)
+        {
+            var workouts = await _workoutsRepository.GetWorkoutsByUser(idUser);
+            return workouts.Select(w => new WorkoutGraphQLDto
+            {
+                Id = w.Id,
+                Name = w.Name,
+                WorkoutExercises = w.WorkoutExercises.Select(we => new WorkoutExercisesAssociationGraphQLDto
+                {
+                    Id = we.Id,
+                    Sets = we.Sets,
+                    Repetitions = we.Repetitions,
+                    Weight = we.Weight,
+                    Exercises = new ExerciseGraphQLDto
+                    {
+                        Id = we.Exercise.Id,
+                        Name = we.Exercise.Name,
+                        Description = we.Exercise.Description,
+                        MuscleGroup = (int)we.Exercise.MuscleGroup,
+                        MuscleGroupName = Enum.GetName(typeof(MuscleGroup), we.Exercise.MuscleGroup) ?? string.Empty
+                    }
+                }).ToList()
+            }).ToList();
         }
     }
 }

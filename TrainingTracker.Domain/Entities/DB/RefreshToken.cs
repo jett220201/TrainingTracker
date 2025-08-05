@@ -15,6 +15,6 @@ namespace TrainingTracker.Domain.Entities.DB
         public DateTime CreatedAt { get; set; }
         public DateTime? RevokedAt { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
     }
 }

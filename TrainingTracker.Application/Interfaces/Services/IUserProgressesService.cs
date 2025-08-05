@@ -1,4 +1,4 @@
-﻿using TrainingTracker.Application.DTOs.UserProgress;
+﻿using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Domain.Entities.DB;
 
 namespace TrainingTracker.Application.Interfaces.Services
