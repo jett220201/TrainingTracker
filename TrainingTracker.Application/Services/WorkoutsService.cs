@@ -79,8 +79,7 @@ namespace TrainingTracker.Application.Services
             var newWorkout = new Workout
             {
                 UserId = workout.UserId,
-                Name = workout.Name,
-                Schedule = workout.Schedule,
+                Name = workout.Name
             };
             newWorkout = await _workoutsRepository.AddReturn(newWorkout);
 

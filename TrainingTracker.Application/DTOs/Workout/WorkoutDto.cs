@@ -12,9 +12,6 @@ namespace TrainingTracker.Application.DTOs.Workout
         public string Name { get; set; } = string.Empty;
         
         [Required]
-        public DateTime Schedule { get; set; }
-        
-        [Required]
         [MinLength(1, ErrorMessage = "At least one exercise must be included.")]
         public ICollection<WorkoutExercisesAssociationDto> ExercisesAssociation { get; set; } = new List<WorkoutExercisesAssociationDto>();
 

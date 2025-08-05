@@ -88,7 +88,6 @@ namespace TrainingTracker.Infrastructure.Persistence
                 // Columns
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-                entity.Property(e => e.Schedule).HasColumnName("schedule");
                 // Relations
                 entity.HasMany(e => e.WorkoutExercises).WithOne(wea => wea.Workout).HasForeignKey(wea => wea.WorkoutId).OnDelete(DeleteBehavior.Cascade);
             });
