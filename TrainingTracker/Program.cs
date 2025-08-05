@@ -68,6 +68,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.RegisterServices();
 builder.Services.RegisterDataSource(builder.Configuration);
+builder.Services.RegisterGraphQLQueries();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddLog4Net("log4net.config");
@@ -89,5 +90,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGraphQL();
 
 app.Run();

@@ -6,6 +6,7 @@ using TrainingTracker.Infrastructure.Persistence;
 using TrainingTracker.Infrastructure.Repository;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Infrastructure.Helpers;
+using TrainingTracker.API.GraphQL.Queries;
 
 namespace TrainingTracker.API.Extensions
 {
@@ -46,6 +47,11 @@ namespace TrainingTracker.API.Extensions
                     maxRetryDelay: TimeSpan.FromSeconds(30),
                     errorNumbersToAdd: null);
             }));
+        }
+
+        public static void RegisterGraphQLQueries(this IServiceCollection services)
+        {
+            services.AddGraphQLServer().AddQueryType<WorkoutQuery>();
         }
     }
 }
