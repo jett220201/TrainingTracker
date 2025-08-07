@@ -18,6 +18,7 @@ namespace TrainingTracker.Infrastructure.Persistence
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<WorkoutExercisesAssociation> WorkoutExercisesAssociations { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
+        public DbSet<RecoveryToken> RecoveryTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,6 +52,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.HasMany(e => e.UserProgresses).WithOne(up => up.User).HasForeignKey(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.Workouts).WithOne(w => w.User).HasForeignKey(w => w.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.RefreshTokens).WithOne(rt => rt.User).HasForeignKey(rt => rt.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(e => e.RecoveryTokens).WithOne(rt => rt.User).HasForeignKey(rt => rt.UserId).OnDelete(DeleteBehavior.Cascade);
                 // Indexes
                 entity.HasIndex(e => e.Username).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
@@ -116,6 +118,18 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.Repetitions).HasColumnName("repetitions");
                 entity.Property(e => e.Sets).HasColumnName("sets");
                 entity.Property(e => e.Weight).HasColumnName("weight");
+                // Relations
+            });
+
+            modelBuilder.Entity<RecoveryToken>(entity =>
+            {
+                // Primary Key
+                entity.HasKey(e => e.Id);
+                // Columns
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.Token).HasColumnName("token");
+                entity.Property(e => e.ExpiresAt).HasColumnName("expires_at");
+                entity.Property(e => e.Used).HasColumnName("used");
                 // Relations
             });
         }

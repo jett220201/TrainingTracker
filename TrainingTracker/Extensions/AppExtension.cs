@@ -21,6 +21,7 @@ namespace TrainingTracker.API.Extensions
             services.AddScoped<IWorkoutsRepository, WorkoutsRepository>();
             services.AddScoped<IWorkoutExercisesAssociationsRepository, WorkoutExercisesAssociationsRepository>();
             services.AddScoped<IExercisesRepository, ExercisesRepository>();
+            services.AddScoped<IRecoveryTokensRepository, RecoveryTokensRepository>();
             #endregion
 
             #region Services
@@ -30,6 +31,7 @@ namespace TrainingTracker.API.Extensions
             services.AddScoped<IWorkoutsService, WorkoutsService>();
             services.AddScoped<IWorkoutExercisesAssociationsService, WorkoutExercisesAssociationsService>();
             services.AddScoped<IExercisesService, ExercisesService>();
+            services.AddScoped<IRecoveryTokensService, RecoveryTokensService>();
             #endregion
 
             #region Helpers

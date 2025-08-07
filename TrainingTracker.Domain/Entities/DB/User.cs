@@ -19,6 +19,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public DateTime? LockOutEnd { get; set; }
 
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public ICollection<RecoveryToken> RecoveryTokens { get; set; } = new List<RecoveryToken>();
         public ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
         public ICollection<Workout> Workouts { get; set; } = new List<Workout>();
     }
