@@ -1,4 +1,5 @@
-﻿using TrainingTracker.Application.DTOs.REST.UserProgress;
+﻿using TrainingTracker.Application.DTOs.GraphQL.UserProgress;
+using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
@@ -64,6 +65,23 @@ namespace TrainingTracker.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
             return _userProgressesRepository.Add(newUserProgress);
+        }
+
+        public async Task<IEnumerable<UserProgressGraphQLDto>> GetUserProgressByUser(int idUser)
+        {
+            var progress = await _userProgressesRepository.GetUserProgressByUser(idUser);
+            return progress.Select(up => new UserProgressGraphQLDto
+            {
+                UserId = up.UserId,
+                BodyFatPercentage = up.BodyFatPercentage,
+                Weight = up.Weight,
+                CreatedAt = up.CreatedAt
+            }).OrderBy(x => x.CreatedAt).ToList();
+        }
+
+        public async Task<int> GetWorkoutCountByUser(int idUser)
+        {
+            return await _userProgressesRepository.GetWorkoutsCountByUser(idUser);
         }
     }
 }

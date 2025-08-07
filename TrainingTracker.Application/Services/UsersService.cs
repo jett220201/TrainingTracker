@@ -1,4 +1,5 @@
-﻿using TrainingTracker.Application.DTOs.User;
+﻿using TrainingTracker.Application.DTOs.GraphQL.User;
+using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
@@ -10,11 +11,13 @@ namespace TrainingTracker.Application.Services
     {
         private readonly IUsersRepository _userRepository;
         private readonly ISecurityHelper _securityHelper;
+        private readonly IUserProgressesService _userProgressesService;
 
-        public UsersService(IUsersRepository userRepository, ISecurityHelper securityHelper)
+        public UsersService(IUsersRepository userRepository,IUserProgressesService userProgressesService, ISecurityHelper securityHelper)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _securityHelper = securityHelper ?? throw new ArgumentNullException(nameof(securityHelper));
+            _userProgressesService = userProgressesService ?? throw new ArgumentNullException(nameof(userProgressesService));
         }
 
         public Task Add(User entity)
@@ -138,6 +141,22 @@ namespace TrainingTracker.Application.Services
                 throw new ArgumentException("Old password is incorrect.");
             }
             await Delete(user);
+        }
+
+        public async Task<UserGraphQLDto> GetInfoUserById(int id)
+        {
+            var user = await _userRepository.GetById(id);
+            var workoutsCount = await _userProgressesService.GetWorkoutCountByUser(id);
+            return new UserGraphQLDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt,
+                WorkoutsCount = workoutsCount
+            };
         }
     }
 }

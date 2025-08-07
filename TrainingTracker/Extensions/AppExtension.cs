@@ -51,7 +51,12 @@ namespace TrainingTracker.API.Extensions
 
         public static void RegisterGraphQLQueries(this IServiceCollection services)
         {
-            services.AddGraphQLServer().AddQueryType<WorkoutQuery>();
+            services.AddGraphQLServer()
+                .AddAuthorization()
+                .AddQueryType(d => d.Name("Query"))
+                .AddType<WorkoutQuery>()
+                .AddType<UserProgressQuery>()
+                .AddType<UserQuery>();
         }
     }
 }
