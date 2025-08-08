@@ -1,4 +1,5 @@
 ﻿using TrainingTracker.Application.DTOs.GraphQL.User;
+using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Domain.Entities.DB;
 
@@ -14,5 +15,6 @@ namespace TrainingTracker.Application.Interfaces.Services
         Task RecoverPassword(UserRecoverPasswordRequestDto request);
         Task DeleteAccount(UserDeleteAccountRequestDto request);
         Task<UserGraphQLDto> GetInfoUserById(int id);
+        Task ChangePasswordRecovery(UserRecoveryPasswordRequestDto request);
     }
 }

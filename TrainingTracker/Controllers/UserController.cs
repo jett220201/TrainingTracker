@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.REST.General;
+using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
@@ -60,6 +61,30 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userService.ChangePassword(request);
+                return HandleSuccess("Password changed successfully.");
+            }
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "An error occurred while changing the password.");
+            }
+        }
+
+        [HttpPost("change-password-recovery")]
+        [SwaggerOperation(Summary = "Change Password via Recovery", Description = "Change the password using a recovery token")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ChangePasswordRecovery([FromBody] UserRecoveryPasswordRequestDto request)
+        {
+            if (!ModelState.IsValid) return HandleInvalidModelState();
+            try
+            {
+                await _userService.ChangePasswordRecovery(request);
                 return HandleSuccess("Password changed successfully.");
             }
             catch (ValidationException ex)

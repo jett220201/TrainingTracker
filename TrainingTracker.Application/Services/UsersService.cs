@@ -1,4 +1,6 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.User;
+﻿using Microsoft.Extensions.Configuration;
+using TrainingTracker.Application.DTOs.GraphQL.User;
+using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
@@ -9,15 +11,22 @@ namespace TrainingTracker.Application.Services
 {
     public class UsersService : IUserService
     {
+        private readonly IConfiguration _configuration;
         private readonly IUsersRepository _userRepository;
-        private readonly ISecurityHelper _securityHelper;
         private readonly IUserProgressesService _userProgressesService;
+        private readonly IRecoveryTokensService _recoveryTokensService;
+        private readonly ISecurityHelper _securityHelper;
+        private readonly IEmailHelper _emailHelper;
 
-        public UsersService(IUsersRepository userRepository,IUserProgressesService userProgressesService, ISecurityHelper securityHelper)
+        public UsersService(IUsersRepository userRepository,IUserProgressesService userProgressesService, IConfiguration configuration,
+            IRecoveryTokensService recoveryTokensService, ISecurityHelper securityHelper, IEmailHelper emailHelper)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _securityHelper = securityHelper ?? throw new ArgumentNullException(nameof(securityHelper));
             _userProgressesService = userProgressesService ?? throw new ArgumentNullException(nameof(userProgressesService));
+            _recoveryTokensService = recoveryTokensService ?? throw new ArgumentNullException(nameof(recoveryTokensService));
+            _emailHelper = emailHelper ?? throw new ArgumentNullException(nameof(emailHelper));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public Task Add(User entity)
@@ -123,10 +132,36 @@ namespace TrainingTracker.Application.Services
             await Update(user);
         }
 
-        public Task RecoverPassword(UserRecoverPasswordRequestDto request)
+        public async Task RecoverPassword(UserRecoverPasswordRequestDto request)
         {
-            // TODO: Add email sending logic here
-            throw new NotImplementedException();
+            var user = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
+            if(user == null)
+            {
+                throw new ArgumentException("If the email is registered, you will receive a message with instructions");
+            }
+            // Create recovery token
+            var recoveryToken = await _recoveryTokensService.AddReturn(new()
+            {
+                UserId = user.Id,
+                Token = Guid.NewGuid().ToString(),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(15),
+                Used = false
+            });
+            // Send recovery email with token
+            await _emailHelper.SendEmailAsync(
+                user.Name,
+                user.Email,
+                "Password Recovery",                           
+                $"To recover your password, please click the following link: " +
+                $"<br>" +
+                $"<table cellspacing=\"\"0\"\" cellpadding=\"\"0\"\" style=\"\"display: grid; place-items:center; padding-top: 45px;\"\">" +
+                $"<tr>" +
+                $"<td style=\"\"padding: 10px 20px; border-radius: 5px;\"\">" +
+                $"<a href='{_configuration["RecoveryLink"]}{recoveryToken.Token}' style=\"\"border-radius: 6px; background:#122b38; color: white; padding: 10px; text-decoration: none\"\">Recover Password</a>" +
+                $"</td>" +
+                $"</tr>" +
+                $"</table>"
+            );
         }
 
         public async Task DeleteAccount(UserDeleteAccountRequestDto request)
@@ -157,6 +192,32 @@ namespace TrainingTracker.Application.Services
                 CreatedAt = user.CreatedAt,
                 WorkoutsCount = workoutsCount
             };
+        }
+
+        public async Task ChangePasswordRecovery(UserRecoveryPasswordRequestDto request)
+        {
+            var token = await _recoveryTokensService.GetRecoveryTokenByToken(request.Token);
+            if (token == null || token.Used || token.ExpiresAt < DateTime.UtcNow)
+            {
+                throw new ArgumentException("Invalid or expired recovery token.");
+            }
+            // Update user password and token status
+            var user = await GetById(token.UserId);
+            if (_securityHelper.VerifyPassword(request.NewPassword ?? "", user.PasswordHash ?? ""))
+            {
+                throw new ArgumentException("The new password must be different from the old password.");
+            }
+            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword);
+            await Update(user);
+            token.Used = true;
+            await _recoveryTokensService.Update(token);
+            // Send confirmation email
+            await _emailHelper.SendEmailAsync(
+                user.Name,
+                user.Email,
+                "Password Reset",
+                $"Your password has been successfully changed using the recovery procedure."
+            );
         }
     }
 }
