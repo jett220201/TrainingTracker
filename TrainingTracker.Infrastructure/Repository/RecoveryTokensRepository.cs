@@ -12,5 +12,13 @@ namespace TrainingTracker.Infrastructure.Repository
         {
             _context = context;
         }
+
+        public async Task<RecoveryToken> GetRecoveryTokenByToken(string token)
+        {
+            var context = await _context.CreateDbContextAsync();
+            return await context.RecoveryTokens
+                .AsNoTracking()
+                .FirstOrDefaultAsync(rt => rt.Token == token);
+        }
     }
 }

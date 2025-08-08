@@ -35,6 +35,12 @@ namespace TrainingTracker.Application.Services
         {
             return _recoveryTokensRepository.GetById(id);
         }
+
+        public async Task<RecoveryToken> GetRecoveryTokenByToken(string token)
+        {
+            return await _recoveryTokensRepository.GetRecoveryTokenByToken(token);
+        }
+
         public Task Update(RecoveryToken entity)
         {
             return _recoveryTokensRepository.Update(entity);
