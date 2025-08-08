@@ -21,8 +21,8 @@ namespace TrainingTracker.Application.Services
         {
             _workoutsRepository = workoutsRepository ?? throw new ArgumentNullException(nameof(workoutsRepository));
             _workoutExercisesAssociationsService = workoutExercisesAssociationsService ?? throw new ArgumentNullException(nameof(workoutExercisesAssociationsService));
-            _exercisesService = exercisesService;
-            _usersService = usersService;
+            _exercisesService = exercisesService ?? throw new ArgumentNullException(nameof(exercisesService));
+            _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
         }
 
         public Task Add(Workout entity)
