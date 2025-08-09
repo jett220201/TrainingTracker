@@ -17,7 +17,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public string Email { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public int Height { get; set; } // Height in centimeters
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         public DateTime CreatedAt { get; set; }
         public int FailedLoginAttempts { get; set; }
         public DateTime? LockOutEnd { get; set; }

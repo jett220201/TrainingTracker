@@ -14,7 +14,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public int Repetitions { get; set; }
         public int Sets { get; set; }
         public decimal Weight { get; set; }
-        public int RestTime { get; set; }
+        public int RestTime { get; set; } // Rest time in minutes
 
         public virtual Workout? Workout { get; set; }
         public virtual Exercise? Exercise { get; set; }
