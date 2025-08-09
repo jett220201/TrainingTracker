@@ -8,6 +8,5 @@ namespace TrainingTracker.Application.Interfaces.Services
     {
         Task AddNewUserProgress(UserProgressDto userProgress);
         Task<IEnumerable<UserProgressGraphQLDto>> GetUserProgressByUser(int idUser);
-        Task<int> GetWorkoutCountByUser(int idUser);
     }
 }

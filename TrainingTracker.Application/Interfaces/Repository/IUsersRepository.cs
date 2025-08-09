@@ -7,5 +7,6 @@ namespace TrainingTracker.Application.Interfaces.Repository
         Task<User> AuthenticateAsync(string username, string password);
         Task<User> GetUserByUserName(string username);
         Task<User> GetUserByEmail(string email);
+        Task<int> GetWorkoutsCountByUser(int idUser);
     }
 }

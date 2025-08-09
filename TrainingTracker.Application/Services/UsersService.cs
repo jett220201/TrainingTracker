@@ -13,17 +13,15 @@ namespace TrainingTracker.Application.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IUsersRepository _userRepository;
-        private readonly IUserProgressesService _userProgressesService;
         private readonly IRecoveryTokensService _recoveryTokensService;
         private readonly ISecurityHelper _securityHelper;
         private readonly IEmailHelper _emailHelper;
 
-        public UsersService(IUsersRepository userRepository,IUserProgressesService userProgressesService, IConfiguration configuration,
+        public UsersService(IUsersRepository userRepository, IConfiguration configuration,
             IRecoveryTokensService recoveryTokensService, ISecurityHelper securityHelper, IEmailHelper emailHelper)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _securityHelper = securityHelper ?? throw new ArgumentNullException(nameof(securityHelper));
-            _userProgressesService = userProgressesService ?? throw new ArgumentNullException(nameof(userProgressesService));
             _recoveryTokensService = recoveryTokensService ?? throw new ArgumentNullException(nameof(recoveryTokensService));
             _emailHelper = emailHelper ?? throw new ArgumentNullException(nameof(emailHelper));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -181,7 +179,7 @@ namespace TrainingTracker.Application.Services
         public async Task<UserGraphQLDto> GetInfoUserById(int id)
         {
             var user = await _userRepository.GetById(id);
-            var workoutsCount = await _userProgressesService.GetWorkoutCountByUser(id);
+            var workoutsCount = await GetWorkoutCountByUser(id);
             return new UserGraphQLDto
             {
                 Id = user.Id,
@@ -218,6 +216,11 @@ namespace TrainingTracker.Application.Services
                 "Password Reset",
                 $"Your password has been successfully changed using the recovery procedure."
             );
+        }
+
+        private async Task<int> GetWorkoutCountByUser(int userId)
+        {
+            return await _userRepository.GetWorkoutsCountByUser(userId);
         }
     }
 }

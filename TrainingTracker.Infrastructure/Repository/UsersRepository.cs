@@ -29,5 +29,11 @@ namespace TrainingTracker.Infrastructure.Repository
             var context = _context.CreateDbContext();
             return context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<int> GetWorkoutsCountByUser(int idUser)
+        {
+            var context = await _context.CreateDbContextAsync();
+            return await context.Workouts.CountAsync(w => w.UserId == idUser);
+        }
     }
 }
