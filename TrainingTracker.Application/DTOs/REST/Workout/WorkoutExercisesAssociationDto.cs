@@ -15,7 +15,11 @@ namespace TrainingTracker.Application.DTOs.REST.Workout
         [Required]
         [Range(0, 9999, ErrorMessage = "Weight must be a non-negative number.")]
         public decimal Weight { get; set; }
-        
+
+        [Required]
+        [Range(0, 60, ErrorMessage = "Rest time must be between 0 and 60 minutes.")]
+        public int RestTimeInMinutes { get; set; }
+
         [Required]
         public int ExerciseId { get; set; }
     }
