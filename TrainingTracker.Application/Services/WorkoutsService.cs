@@ -95,7 +95,8 @@ namespace TrainingTracker.Application.Services
                         ExerciseId = e.ExerciseId,
                         Sets = e.Sets,
                         Repetitions = e.Repetitions,
-                        Weight = e.Weight
+                        Weight = e.Weight,
+                        RestTime = e.RestTimeInMinutes
                     }).ToList();
 
                 await _workoutExercisesAssociationsService.AddRange(associations);

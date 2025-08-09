@@ -6,6 +6,7 @@ using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
+using TrainingTracker.Domain.Entities.ENUM;
 
 namespace TrainingTracker.Application.Services
 {
@@ -103,6 +104,9 @@ namespace TrainingTracker.Application.Services
                 Name = request.Name.Trim(),
                 LastName = request.LastName.Trim(),
                 CreatedAt = DateTime.UtcNow,
+                DateOfBirth = request.DateOfBirth,
+                Height = request.Height,
+                Gender = (Gender)request.Gender,
                 FailedLoginAttempts = 0,
                 LockOutEnd = null
             };
