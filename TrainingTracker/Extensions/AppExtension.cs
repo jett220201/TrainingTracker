@@ -39,6 +39,7 @@ namespace TrainingTracker.API.Extensions
             #region Helpers
             services.AddTransient<ISecurityHelper, SecurityHelper>();
             services.AddTransient<IEmailHelper, SendGridEmailHelper>();
+            services.AddTransient<IFitnessCalculator, FitnessCalculator>();
             #endregion
         }
 
