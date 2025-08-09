@@ -9,5 +9,6 @@
         Arms = 4,
         Shoulders = 5,
         Core = 6,
+        Cardio = 7,
     }
 }

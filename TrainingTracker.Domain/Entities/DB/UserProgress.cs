@@ -9,10 +9,11 @@ namespace TrainingTracker.Domain.Entities.DB
         [Key]
         [Required]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public decimal BodyFatPercentage { get; set; }
-        public decimal Weight { get; set; }
+        public int UserId { get; set; } 
+        public decimal BodyFatPercentage { get; set; } // BFP = (1.2 * BMI) + (0.23 * Age) - (10.8 * GenderFactor) - 5.4 where GenderFactor is 1 for male and 0 for female
+        public decimal Weight { get; set; } // Weight in kilograms
         public DateTime CreatedAt { get; set; }
+        public decimal BodyMassIndex { get; set; } // BMI = weight (kg) / (height (m) * height (m))
 
         public virtual User? User { get; set; }
     }
