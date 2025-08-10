@@ -45,7 +45,13 @@ namespace TrainingTracker.API.Controllers
             {
                 var user = await _userService.GetUserByUserName(request.Username ?? "");
 
-                if (user == null) return HandleUnauthorized("Invalid username or password.");
+                if (user == null)
+                {
+                    // try with email if username not found
+                    user = await _userService.GetUserByEmail(request.Username ?? "");
+                    if (user == null)
+                        return HandleUnauthorized("Invalid username or password.");
+                }
 
                 if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
                     return HandleUnauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
