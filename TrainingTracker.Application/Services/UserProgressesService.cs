@@ -1,4 +1,5 @@
 ﻿using TrainingTracker.Application.DTOs.GraphQL.UserProgress;
+using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
@@ -12,13 +13,16 @@ namespace TrainingTracker.Application.Services
     {
         private readonly IUserProgressesRepository _userProgressesRepository;
         private readonly IUserService _userService;
+        private readonly IUserGoalsService _userGoalsService;
         private readonly IFitnessCalculator _fitnessCalculator;
 
-        public UserProgressesService(IUserProgressesRepository userProgressesRepository, IUserService userService, IFitnessCalculator fitnessCalculator)
+        public UserProgressesService(IUserProgressesRepository userProgressesRepository, IUserService userService,
+            IFitnessCalculator fitnessCalculator, IUserGoalsService userGoalsService)
         {
             _userProgressesRepository = userProgressesRepository ?? throw new ArgumentNullException(nameof(userProgressesRepository));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _fitnessCalculator = fitnessCalculator ?? throw new ArgumentNullException(nameof(fitnessCalculator));
+            _userGoalsService = userGoalsService ?? throw new ArgumentNullException(nameof(userGoalsService));
         }
 
         public Task Add(UserProgress entity)
@@ -71,7 +75,7 @@ namespace TrainingTracker.Application.Services
             var newUserProgress = new UserProgress
             {
                 UserId = userProgress.UserId,
-                BodyFatPercentage = _fitnessCalculator.CalculateBFP(userProgress.Weight, (decimal) user.Height / 100, user.Age, user.Gender == Gender.Male ? 1 : 0),
+                BodyFatPercentage = _fitnessCalculator.CalculateBFP(userProgress.Weight, (decimal)user.Height / 100, user.Age, user.Gender == Gender.Male ? 1 : 0),
                 BodyMassIndex = _fitnessCalculator.CalculateBMI(userProgress.Weight, (decimal)user.Height / 100),
                 Weight = userProgress.Weight,
                 CreatedAt = DateTime.UtcNow
@@ -79,16 +83,37 @@ namespace TrainingTracker.Application.Services
             await _userProgressesRepository.Add(newUserProgress);
         }
 
-        public async Task<IEnumerable<UserProgressGraphQLDto>> GetUserProgressByUser(int idUser)
+        public async Task<UserProgressOverviewGraphQLDto> GetUserProgressByUser(int idUser)
         {
-            var progress = await _userProgressesRepository.GetUserProgressByUser(idUser);
-            return progress.Select(up => new UserProgressGraphQLDto
+            var progressList = (await _userProgressesRepository.GetUserProgressByUser(idUser))
+                .OrderBy(x => x.CreatedAt)
+                .Select(up => new UserProgressGraphQLDto
+                {
+                    UserId = up.UserId,
+                    BodyFatPercentage = up.BodyFatPercentage,
+                    BodyMassIndex = up.BodyMassIndex,
+                    Weight = up.Weight,
+                    CreatedAt = up.CreatedAt
+                }).ToList();
+            var currentProgress = progressList.LastOrDefault();
+            var userGoals = await _userGoalsService.GetUserGoalsActiveByUser(idUser);
+            var goalWeight = userGoals.FirstOrDefault(g => g.GoalType == GoalType.Weight);
+            var goalBodyFatPercentage = userGoals.FirstOrDefault(g => g.GoalType == GoalType.BFP);
+            var goalBodyMassIndex = userGoals.FirstOrDefault(g => g.GoalType == GoalType.BMI);
+
+            return new UserProgressOverviewGraphQLDto
             {
-                UserId = up.UserId,
-                BodyFatPercentage = up.BodyFatPercentage,
-                Weight = up.Weight,
-                CreatedAt = up.CreatedAt
-            }).OrderBy(x => x.CreatedAt).ToList();
+                ProgressEntries = progressList,
+                CurrentWeight = currentProgress?.Weight ?? 0,
+                CurrentBodyFatPercentage = currentProgress?.BodyFatPercentage ?? 0,
+                CurrentBodyMassIndex = currentProgress?.BodyMassIndex ?? 0,
+                GoalWeight = goalWeight?.TargetValue ?? 0,
+                GoalBodyFatPercentage = goalBodyFatPercentage?.TargetValue ?? 0,
+                GoalBodyMassIndex = goalBodyMassIndex?.TargetValue ?? 0,
+                WeightProgressPercent = _fitnessCalculator.CalculateProgressPercent(currentProgress?.Weight ?? 0, goalWeight?.TargetValue ?? 0),
+                BodyFatProgressPercent = _fitnessCalculator.CalculateProgressPercent(currentProgress?.BodyFatPercentage ?? 0, goalBodyFatPercentage?.TargetValue ?? 0),
+                BodyMassIndexProgressPercent = _fitnessCalculator.CalculateProgressPercent(currentProgress?.BodyMassIndex ?? 0, goalBodyMassIndex?.TargetValue ?? 0)
+            };
         }
     }
 }

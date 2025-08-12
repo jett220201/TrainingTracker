@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using TrainingTracker.Application.DTOs.GraphQL.Exercise;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.REST.Exercise;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;

@@ -1,4 +1,4 @@
-﻿namespace TrainingTracker.Application.DTOs.GraphQL.Exercise
+﻿namespace TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise
 {
     public class ExerciseGraphQLDto
     {

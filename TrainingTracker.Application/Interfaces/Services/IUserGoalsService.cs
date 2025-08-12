@@ -6,5 +6,6 @@ namespace TrainingTracker.Application.Interfaces.Services
     public interface IUserGoalsService : IGenericService<UserGoal>
     {
         Task AddNewUserGoal(UserGoalRequestDto userGoalRequest);
+        Task<IEnumerable<UserGoal>> GetUserGoalsActiveByUser(int idUser);
     }
 }

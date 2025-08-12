@@ -1,5 +1,5 @@
 ﻿using HotChocolate.Authorization;
-using TrainingTracker.Application.DTOs.GraphQL.Exercise;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.Interfaces.Services;
 
 namespace TrainingTracker.API.GraphQL.Queries

@@ -1,6 +1,6 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.Exercise;
+﻿using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 
-namespace TrainingTracker.Application.DTOs.GraphQL.Workout
+namespace TrainingTracker.Application.DTOs.GraphQL.Entities.Workout
 {
     public class WorkoutExercisesAssociationGraphQLDto
     {

@@ -4,5 +4,6 @@
     {
         public decimal CalculateBMI(decimal weight, decimal height); // Body Mass Index
         public decimal CalculateBFP(decimal weight, decimal height, int age, int genderFactor); // Body Fat Percentage
+        public decimal CalculateProgressPercent(decimal currentValue, decimal goalValue);
     }
 }

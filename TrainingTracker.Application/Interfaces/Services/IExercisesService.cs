@@ -1,4 +1,4 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.Exercise;
+﻿using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.REST.Exercise;
 using TrainingTracker.Domain.Entities.DB;
 

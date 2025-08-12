@@ -13,5 +13,11 @@ namespace TrainingTracker.Infrastructure.Helpers
         {
             return weight / (height * height);
         }
+
+        public decimal CalculateProgressPercent(decimal currentValue, decimal goalValue)
+        {
+            if (goalValue == 0) return 0;
+            return Math.Min(100, (currentValue / goalValue) * 100);
+        }
     }
 }

@@ -60,6 +60,13 @@ namespace TrainingTracker.Application.Services
         {
             return _userGoalsRepository.GetById(id);
         }
+
+        public async Task<IEnumerable<UserGoal>> GetUserGoalsActiveByUser(int idUser)
+        {
+            var userGoals = await _userGoalsRepository.GetAll();
+            return userGoals.Where(x => x.UserId == idUser && !x.IsAchieved);
+        }
+
         public Task Update(UserGoal entity)
         {
             return _userGoalsRepository.Update(entity);
