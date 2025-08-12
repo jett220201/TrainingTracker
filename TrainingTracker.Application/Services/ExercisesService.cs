@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
+using TrainingTracker.Application.DTOs.GraphQL.Exercise;
 using TrainingTracker.Application.DTOs.REST.Exercise;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
@@ -81,6 +83,73 @@ namespace TrainingTracker.Application.Services
         public Task<Exercise> GetByName(string name)
         {
             return _exercisesRepository.GetByName(name);
+        }
+
+        public async Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, int? first = null, string? after = null)
+        {
+            var exercises = await _exercisesRepository.GetAll();
+
+            var query = exercises.AsQueryable();
+
+            if (muscleGroup != null)
+                query = query.Where(e => e.MuscleGroup == (MuscleGroup)muscleGroup);
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(e => e.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                                      || e.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
+
+            // Decode cursor
+            int startIndex = 0;
+            if (!string.IsNullOrEmpty(after))
+            {
+                var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(after));
+                if (int.TryParse(decoded, out int pos))
+                    startIndex = pos + 1;
+            }
+
+            // Apply pagination
+            var items = query
+                .Skip(startIndex)
+                .Take(first ?? 10)
+                .Select(ex => new ExerciseGraphQLDto
+                {
+                    Id = ex.Id,
+                    Name = ex.Name,
+                    Description = ex.Description,
+                    MuscleGroup = (int)ex.MuscleGroup,
+                    MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
+                })
+                .ToList();
+
+            // Create edges with cursors
+            var edges = items.Select((exercise, index) =>
+            {
+                var absoluteIndex = startIndex + index;
+                var cursor = Convert.ToBase64String(Encoding.UTF8.GetBytes(absoluteIndex.ToString()));
+                return new ExerciseEdge
+                {
+                    Cursor = cursor,
+                    Node = exercise
+                };
+            }).ToList();
+
+            // Check for next page
+            bool hasNextPage = query.Count() > (startIndex + items.Count);
+
+            var pageInfo = new PageInfo
+            {
+                StartCursor = edges.FirstOrDefault()?.Cursor ?? string.Empty,
+                EndCursor = edges.LastOrDefault()?.Cursor ?? string.Empty,
+                HasNextPage = hasNextPage,
+                HasPreviousPage = startIndex > 0
+            };
+
+            return new ExercisesConnection
+            {
+                Edges = edges, 
+                PageInfo = pageInfo, 
+                TotalCount = query.Count()
+            };
         }
     }
 }
