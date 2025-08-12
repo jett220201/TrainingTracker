@@ -30,10 +30,15 @@ namespace TrainingTracker.Infrastructure.Repository
             return context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<int> GetWorkoutsCountByUser(int idUser)
+        public async Task<User> GetUserById(int id)
         {
             var context = await _context.CreateDbContextAsync();
-            return await context.Workouts.CountAsync(w => w.UserId == idUser);
+            return await context.Set<User>()
+                .AsNoTracking()
+                .Include(u => u.Workouts)
+                .Include(u => u.Goals)
+                .Include(u => u.UserProgresses)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

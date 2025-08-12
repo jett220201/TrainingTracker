@@ -182,8 +182,8 @@ namespace TrainingTracker.Application.Services
 
         public async Task<UserGraphQLDto> GetInfoUserById(int id)
         {
-            var user = await _userRepository.GetById(id);
-            var workoutsCount = await GetWorkoutCountByUser(id);
+            var user = await _userRepository.GetUserById(id);
+
             return new UserGraphQLDto
             {
                 Id = user.Id,
@@ -192,7 +192,11 @@ namespace TrainingTracker.Application.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 CreatedAt = user.CreatedAt,
-                WorkoutsCount = workoutsCount
+                Height = user.Height,
+                Gender = user.Gender,
+                WorkoutsCount = user.Workouts.Count,
+                ActiveGoalsCount = user.Goals.Count(g => !g.IsAchieved),
+                CurrentWeight = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault()?.Weight ?? 0
             };
         }
 
@@ -222,9 +226,5 @@ namespace TrainingTracker.Application.Services
             );
         }
 
-        private async Task<int> GetWorkoutCountByUser(int userId)
-        {
-            return await _userRepository.GetWorkoutsCountByUser(userId);
-        }
     }
 }

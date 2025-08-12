@@ -1,4 +1,4 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.UserProgress;
+﻿using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Application.Interfaces.Helpers;
