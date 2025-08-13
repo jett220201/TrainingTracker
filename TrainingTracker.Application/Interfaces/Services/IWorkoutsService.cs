@@ -9,6 +9,6 @@ namespace TrainingTracker.Application.Interfaces.Services
     {
         public Task AddNewWorkout(WorkoutDto workout);
         public Task<List<WorkoutGraphQLDto>> GetWorkoutsByUser(int idUser);
-        public Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser);
+        public Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser, string? search = null);
     }
 }

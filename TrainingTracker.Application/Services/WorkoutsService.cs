@@ -129,9 +129,13 @@ namespace TrainingTracker.Application.Services
             }).ToList();
         }
 
-        public async Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser)
+        public async Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser, string? search = null)
         {
             var workouts = await GetWorkoutsByUser(idUser);
+            if (!string.IsNullOrEmpty(search))
+            {
+                workouts = workouts.Where(w => w.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
             return new WorkoutsOverviewGraphQLDto { TotalWorkouts = workouts.Count, Workouts = workouts };
         }
     }
