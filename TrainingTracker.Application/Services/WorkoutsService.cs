@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
+using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.Workout;
 using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
@@ -126,6 +127,12 @@ namespace TrainingTracker.Application.Services
                     }
                 }).ToList()
             }).ToList();
+        }
+
+        public async Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser)
+        {
+            var workouts = await GetWorkoutsByUser(idUser);
+            return new WorkoutsOverviewGraphQLDto { TotalWorkouts = workouts.Count, Workouts = workouts };
         }
     }
 }
