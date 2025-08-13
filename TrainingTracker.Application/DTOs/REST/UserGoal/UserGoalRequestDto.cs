@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using TrainingTracker.Domain.Entities.ENUM;
 
 namespace TrainingTracker.Application.DTOs.REST.UserGoal

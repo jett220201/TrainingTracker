@@ -1,4 +1,5 @@
 ﻿using HotChocolate.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
 using TrainingTracker.Application.Interfaces.Services;
 
@@ -8,9 +9,14 @@ namespace TrainingTracker.API.GraphQL.Queries
     public class WorkoutQuery
     {
         [Authorize]
-        public async Task<IEnumerable<WorkoutGraphQLDto>> GetWorkoutsByUser(int idUser, [Service] IWorkoutsService workoutsService)
+        public async Task<IEnumerable<WorkoutGraphQLDto>> GetWorkoutsByUser([Service] IHttpContextAccessor httpContextAccessor, [Service] IWorkoutsService workoutsService)
         {
-            return await workoutsService.GetWorkoutsByUser(idUser);
+            var userIdClaims = httpContextAccessor.HttpContext?.User.FindFirst(JwtRegisteredClaimNames.Sub);
+            if (userIdClaims == null || !int.TryParse(userIdClaims.Value, out int userId))
+            {
+                throw new ArgumentException("User ID not found in claims.");
+            }
+            return await workoutsService.GetWorkoutsByUser(userId);
         }
     }
 }
