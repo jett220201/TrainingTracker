@@ -14,6 +14,7 @@ namespace TrainingTracker.Domain.Entities.DB
         public string Description { get; set; } = string.Empty;
         public decimal TargetValue { get; set; }
         public GoalType GoalType { get; set; }
+        public GoalDirection GoalDirection { get; set; }
         public DateOnly CreatedAt { get; set; }
         public DateOnly GoalDate { get; set; }
         public bool IsAchieved { get; set; } = false;

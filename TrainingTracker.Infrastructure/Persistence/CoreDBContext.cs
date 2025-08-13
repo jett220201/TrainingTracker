@@ -149,6 +149,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.Description).HasColumnName("description");
                 entity.Property(e => e.TargetValue).HasColumnName("target_value");
                 entity.Property(e => e.GoalType).HasColumnName("goal_type");
+                entity.Property(e => e.GoalDirection).HasColumnName("goal_direction");
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 entity.Property(e => e.GoalDate).HasColumnName("goal_date");
                 entity.Property(e => e.IsAchieved).HasColumnName("is_achieved");
