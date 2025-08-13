@@ -36,6 +36,7 @@ namespace TrainingTracker.Infrastructure.Repository
             return await context.Set<User>()
                 .AsNoTracking()
                 .Include(u => u.Workouts)
+                .ThenInclude(w => w.WorkoutExercises)
                 .Include(u => u.Goals)
                 .Include(u => u.UserProgresses)
                 .FirstOrDefaultAsync(u => u.Id == id);

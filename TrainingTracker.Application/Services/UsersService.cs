@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
 using TrainingTracker.Application.DTOs.GraphQL.User;
+using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
@@ -229,6 +232,44 @@ namespace TrainingTracker.Application.Services
         public Task<User> GetUserById(int id)
         {
             return _userRepository.GetUserById(id);
+        }
+
+        public async Task<HomeOverviewGraphQLDto> GetHomeInfoByUser(int userId)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.");
+            }
+
+            var lastProgress = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault();
+            return new HomeOverviewGraphQLDto
+            {
+                UserName = user.Name,
+                CurrentWeight = lastProgress?.Weight ?? 0,
+                CurrentBodyFatPercentage = lastProgress?.BodyFatPercentage ?? 0,
+                CurrentBodyMassIndex = lastProgress?.BodyMassIndex ?? 0,
+                WeightProgressEntries = user.UserProgresses.Select(up => new UserProgressGraphQLDto
+                {
+                    UserId = userId,
+                    Weight = up.Weight,
+                    BodyFatPercentage = up.BodyFatPercentage,
+                    BodyMassIndex = up.BodyMassIndex,
+                    CreatedAt = up.CreatedAt
+                }).ToList(),
+                Workouts = user.Workouts.OrderByDescending(x => x.Id).Take(3).Select(w => new WorkoutGraphQLDto // Just take last 3 workouts
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    WorkoutExercises = w.WorkoutExercises.Select(we => new WorkoutExercisesAssociationGraphQLDto
+                    {
+                        Id = we.Id,
+                        Sets = we.Sets,
+                        Repetitions = we.Repetitions,
+                        Weight = we.Weight,
+                    }).ToList(),
+                }).ToList()
+            };
         }
     }
 }

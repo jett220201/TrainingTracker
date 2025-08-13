@@ -34,6 +34,7 @@ namespace TrainingTracker.API.Extensions
             services.AddScoped<IExercisesService, ExercisesService>();
             services.AddScoped<IRecoveryTokensService, RecoveryTokensService>();
             services.AddScoped<IUserGoalsService, UserGoalsService>();
+            services.AddHttpContextAccessor();
             #endregion
 
             #region Helpers
@@ -63,7 +64,8 @@ namespace TrainingTracker.API.Extensions
                 .AddType<WorkoutQuery>()
                 .AddType<UserProgressQuery>()
                 .AddType<UserQuery>()
-                .AddType<ExercisesQuery>();
+                .AddType<ExercisesQuery>()
+                .AddType<HomeQuery>();
         }
     }
 }
