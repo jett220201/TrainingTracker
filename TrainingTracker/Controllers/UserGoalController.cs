@@ -12,9 +12,11 @@ namespace TrainingTracker.API.Controllers
     public class UserGoalController : BaseApiController
     {
         private readonly IUserGoalsService _userGoalsService;
-        public UserGoalController(IUserGoalsService userGoalsService)
+        private readonly IUserProgressesService _userProgressesService;
+        public UserGoalController(IUserGoalsService userGoalsService, IUserProgressesService userProgressesService)
         {
             _userGoalsService = userGoalsService;
+            _userProgressesService = userProgressesService;
         }
 
         [Authorize]
@@ -29,6 +31,11 @@ namespace TrainingTracker.API.Controllers
 
             try
             {
+                var (isValid, errorMessage) = await _userProgressesService.IsValidGoal(userGoalRequest);
+                if (!isValid)
+                {
+                    return HandleValidationException(new ArgumentException(errorMessage));
+                }
                 await _userGoalsService.AddNewUserGoal(userGoalRequest);
                 return HandleSuccess("User goal added successfully.");
             }

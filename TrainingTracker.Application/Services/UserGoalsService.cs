@@ -33,6 +33,7 @@ namespace TrainingTracker.Application.Services
                 Description = userGoalRequest.Description,
                 TargetValue = userGoalRequest.TargetValue,
                 GoalType = (GoalType)userGoalRequest.GoalType,
+                GoalDirection = (GoalDirection)userGoalRequest.GoalDirection,
                 GoalDate = userGoalRequest.GoalDate,
                 CreatedAt = DateOnly.FromDateTime(DateTime.Now),
                 IsAchieved = false

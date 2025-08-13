@@ -226,5 +226,9 @@ namespace TrainingTracker.Application.Services
             );
         }
 
+        public Task<User> GetUserById(int id)
+        {
+            return _userRepository.GetUserById(id);
+        }
     }
 }

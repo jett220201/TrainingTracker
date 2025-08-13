@@ -15,11 +15,16 @@ namespace TrainingTracker.Application.DTOs.REST.UserGoal
         public string Description { get; set; } = string.Empty;
 
         [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Target value must be greater than zero")]
         public decimal TargetValue { get; set; }
 
         [Required]
         [EnumDataType(typeof(GoalType))]
         public int GoalType { get; set; }
+
+        [Required]
+        [EnumDataType(typeof(GoalDirection))]
+        public int GoalDirection { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
