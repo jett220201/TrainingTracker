@@ -21,7 +21,8 @@ namespace TrainingTracker.Domain.Entities.DB
         public DateTime CreatedAt { get; set; }
         public int FailedLoginAttempts { get; set; }
         public DateTime? LockOutEnd { get; set; }
-        
+        public string PreferredLanguage { get; set; } = "en";
+
         [NotMapped]
         public int Age
         {

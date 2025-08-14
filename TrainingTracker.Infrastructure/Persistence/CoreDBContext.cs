@@ -52,6 +52,7 @@ namespace TrainingTracker.Infrastructure.Persistence
                 entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
                 entity.Property(e => e.Gender).HasColumnName("gender");
                 entity.Property(e => e.Height).HasColumnName("height");
+                entity.Property(e => e.PreferredLanguage).HasColumnName("preferred_language").HasDefaultValue("en");
                 // Relations
                 entity.HasMany(e => e.UserProgresses).WithOne(up => up.User).HasForeignKey(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(e => e.Workouts).WithOne(w => w.User).HasForeignKey(w => w.UserId).OnDelete(DeleteBehavior.Cascade);
