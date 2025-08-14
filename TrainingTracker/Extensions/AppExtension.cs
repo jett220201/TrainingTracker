@@ -65,7 +65,8 @@ namespace TrainingTracker.API.Extensions
                 .AddType<UserProgressQuery>()
                 .AddType<UserQuery>()
                 .AddType<ExercisesQuery>()
-                .AddType<HomeQuery>();
+                .AddType<HomeQuery>()
+                .AddType<GoalsQuery>();
         }
     }
 }
