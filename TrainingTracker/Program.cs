@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TrainingTracker.API.Extensions;
+using TrainingTracker.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,6 +89,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<UserLanguageMiddleware>();
 
 app.MapControllers();
 
