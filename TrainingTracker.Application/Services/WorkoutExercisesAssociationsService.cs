@@ -38,6 +38,12 @@ namespace TrainingTracker.Application.Services
             return _workoutExercisesAssociationsRepository.GetAll();
         }
 
+        public async Task<List<WorkoutExercisesAssociation>> GetAssociationsByWorkoutId(int id)
+        {
+            var associations = await _workoutExercisesAssociationsRepository.GetAll();
+            return associations.Where(a => a.WorkoutId == id).ToList();
+        }
+
         public Task<WorkoutExercisesAssociation> GetById(int id)
         {
             return _workoutExercisesAssociationsRepository.GetById(id);

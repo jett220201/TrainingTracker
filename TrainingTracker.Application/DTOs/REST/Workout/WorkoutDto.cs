@@ -7,6 +7,8 @@ namespace TrainingTracker.Application.DTOs.REST.Workout
         [Required]
         public int UserId { get; set; }
 
+        public int? Id { get; set; } // Optional, just used for editing existing workouts
+
         [Required]
         [StringLength(50, ErrorMessage = "Name cannot be longer than 50 characters.")]
         public string Name { get; set; } = string.Empty;

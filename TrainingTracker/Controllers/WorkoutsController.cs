@@ -66,5 +66,29 @@ namespace TrainingTracker.API.Controllers
                 return HandleException(ex, "An error occurred while deleting the workout.");
             }
         }
+        
+        [Authorize]
+        [HttpPost("edit")]
+        [SwaggerOperation(Summary = "Edit workout", Description = "Edit an existing workout")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EditWorkout([FromBody] WorkoutDto workout)
+        {
+            if (!ModelState.IsValid) return HandleInvalidModelState();
+            try
+            {
+                await _workoutsService.EditWorkout(workout);
+                return HandleSuccess("Workout updated successfully.");
+            }
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "An error occurred while editing the workout.");
+            }
+        }
     }
 }

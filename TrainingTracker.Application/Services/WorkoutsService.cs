@@ -143,5 +143,45 @@ namespace TrainingTracker.Application.Services
             }
             return new WorkoutsOverviewGraphQLDto { TotalWorkouts = workouts.Count, Workouts = workouts };
         }
+
+        public async Task EditWorkout(WorkoutDto workout)
+        {
+            var workoutToEdit = await _workoutsRepository.GetById(workout.Id ?? 0);
+            if (workoutToEdit == null)
+            {
+                throw new ValidationException($"Workout with ID {workout.Id} does not exist.");
+            }
+            if (await _usersService.GetById(workout.UserId) == null)
+            {
+                throw new ValidationException($"User with ID {workout.UserId} does not exist.");
+            }
+            // Update workout details
+            workoutToEdit.Name = workout.Name;
+            await _workoutsRepository.Update(workoutToEdit);
+
+            // Remove existing associations
+            var currentAssociations = await _workoutExercisesAssociationsService.GetAssociationsByWorkoutId(workoutToEdit.Id);
+            foreach (var association in currentAssociations)
+            {
+                await _workoutExercisesAssociationsService.Delete(association);
+            }
+
+            // Add new associations
+            if (workout.ExercisesAssociation != null && workout.ExercisesAssociation.Any())
+            {
+                var associations = workout.ExercisesAssociation
+                    .Select(e => new WorkoutExercisesAssociation
+                    {
+                        WorkoutId = workoutToEdit.Id,
+                        ExerciseId = e.ExerciseId,
+                        Sets = e.Sets,
+                        Repetitions = e.Repetitions,
+                        Weight = e.Weight,
+                        RestTime = e.RestTimeInMinutes
+                    }).ToList();
+
+                await _workoutExercisesAssociationsService.AddRange(associations);
+            }
+        }
     }
 }

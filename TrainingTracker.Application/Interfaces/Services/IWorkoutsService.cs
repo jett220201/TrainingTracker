@@ -8,6 +8,7 @@ namespace TrainingTracker.Application.Interfaces.Services
     public interface IWorkoutsService : IGenericService<Workout>
     {
         public Task AddNewWorkout(WorkoutDto workout);
+        public Task EditWorkout(WorkoutDto workout);
         public Task<List<WorkoutGraphQLDto>> GetWorkoutsByUser(int idUser);
         public Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser, string? search = null);
     }
