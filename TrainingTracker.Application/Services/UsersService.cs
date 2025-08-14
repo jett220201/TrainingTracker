@@ -111,7 +111,8 @@ namespace TrainingTracker.Application.Services
                 Height = request.Height,
                 Gender = (Gender)request.Gender,
                 FailedLoginAttempts = 0,
-                LockOutEnd = null
+                LockOutEnd = null,
+                PreferredLanguage = request.PreferredLanguage?.Trim().ToLowerInvariant() ?? "en"
             };
 
             await Add(user);

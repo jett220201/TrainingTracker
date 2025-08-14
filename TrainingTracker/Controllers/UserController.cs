@@ -33,6 +33,8 @@ namespace TrainingTracker.API.Controllers
 
             try
             {
+                var lang = HttpContext.Request.Headers.AcceptLanguage.ToString();
+                request.PreferredLanguage = lang;
                 await _userService.Register(request);
 
                 return HandleSuccess("User registered successfully.");

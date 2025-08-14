@@ -37,5 +37,7 @@ namespace TrainingTracker.Application.DTOs.User
         [Required]
         [EnumDataType(typeof(Gender), ErrorMessage = "Gender must be Male or Female")]
         public int Gender { get; set; }
+
+        public string? PreferredLanguage { get; set; }
     }
 }
