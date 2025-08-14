@@ -190,11 +190,12 @@ namespace TrainingTracker.Application.Services
 
         private bool IsGoalAchieved(UserGoal goal, decimal currentValue)
         {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
             return goal.GoalDirection switch
             {
                 GoalDirection.Increase => currentValue >= goal.TargetValue,
                 GoalDirection.Decrease => currentValue <= goal.TargetValue,
-                GoalDirection.Maintain => Math.Abs(currentValue - goal.TargetValue) <= goal.TargetValue * 0.02m, // 2% error margin for maintenance goals
+                GoalDirection.Maintain => goal.GoalDate >= today && Math.Abs(currentValue - goal.TargetValue) <= goal.TargetValue * 0.02m, // 2% error margin for maintenance goals
                 _ => false
             };
         }

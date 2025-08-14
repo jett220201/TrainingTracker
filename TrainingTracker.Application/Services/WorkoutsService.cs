@@ -131,6 +131,11 @@ namespace TrainingTracker.Application.Services
 
         public async Task<WorkoutsOverviewGraphQLDto> GetWorkoutsOverview(int idUser, string? search = null)
         {
+            var user = await _usersService.GetUserById(idUser);
+            if (user == null)
+            {
+                throw new ArgumentException("User not found.");
+            }
             var workouts = await GetWorkoutsByUser(idUser);
             if (!string.IsNullOrEmpty(search))
             {
