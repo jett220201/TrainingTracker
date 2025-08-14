@@ -69,5 +69,30 @@ namespace TrainingTracker.API.Controllers
                 return HandleException(ex, "An error occurred while deleting user goal.");
             }
         }
+
+        [Authorize]
+        [HttpPost("edit")]
+        [SwaggerOperation(Summary = "Edit user goal", Description = "Edit an existing user goal")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EditUserGoal([FromBody] UserGoalRequestDto userGoalRequest)
+        {
+            if (!ModelState.IsValid) return HandleInvalidModelState();
+            try
+            {
+                var (isValid, errorMessage) = await _userProgressesService.IsValidGoal(userGoalRequest);
+                if (!isValid)
+                {
+                    return HandleValidationException(new ArgumentException(errorMessage));
+                }
+                await _userGoalsService.EditUserGoal(userGoalRequest);
+                return HandleSuccess("User goal edited successfully.");
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "An error occurred while editing user goal.");
+            }
+        }
     }
 }

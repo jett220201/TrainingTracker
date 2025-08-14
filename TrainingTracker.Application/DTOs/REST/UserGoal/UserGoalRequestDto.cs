@@ -8,6 +8,8 @@ namespace TrainingTracker.Application.DTOs.REST.UserGoal
         [Required]
         public int UserId { get; set; }
 
+        public int? Id { get; set; } // Optional, used for editing existing goals
+
         [Required]
         [MaxLength(500)]
         [MinLength(5)]

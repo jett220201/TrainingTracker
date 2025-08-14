@@ -1,4 +1,5 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.Entities.UserGoal;
+﻿using System.ComponentModel.DataAnnotations;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.UserGoal;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.UserGoal;
 using TrainingTracker.Application.Interfaces.Repository;
@@ -17,6 +18,7 @@ namespace TrainingTracker.Application.Services
             _userGoalsRepository = userGoalsRepository ?? throw new ArgumentNullException(nameof(userGoalsRepository));
             _userService = userService;
         }
+        
         public Task Add(UserGoal entity)
         {
             return _userGoalsRepository.Add(entity);
@@ -116,6 +118,26 @@ namespace TrainingTracker.Application.Services
         public Task<UserGoal> UpdateReturn(UserGoal entity)
         {
             return _userGoalsRepository.UpdateReturn(entity);
+        }
+
+        public async Task EditUserGoal(UserGoalRequestDto userGoalRequest)
+        {
+            var userGoalToEdit = await _userGoalsRepository.GetById(userGoalRequest.Id ?? 0);
+            if (userGoalToEdit == null)
+            {
+                throw new ArgumentException($"User goal with ID {userGoalRequest.Id} does not exist.");
+            }
+            if (await _userService.GetById(userGoalRequest.UserId) == null)
+            {
+                throw new ValidationException($"User with ID {userGoalRequest.UserId} does not exist.");
+            }
+            // Update the user goal properties
+            userGoalToEdit.Description = userGoalRequest.Description;
+            userGoalToEdit.TargetValue = userGoalRequest.TargetValue;
+            userGoalToEdit.GoalType = (GoalType)userGoalRequest.GoalType;
+            userGoalToEdit.GoalDirection = (GoalDirection)userGoalRequest.GoalDirection;
+            userGoalToEdit.GoalDate = userGoalRequest.GoalDate;
+            await _userGoalsRepository.Update(userGoalToEdit);
         }
 
         private decimal GetCurrentGoalValue(UserGoal goal, UserProgress userProgress)
