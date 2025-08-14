@@ -44,5 +44,30 @@ namespace TrainingTracker.API.Controllers
                 return HandleException(ex, "An error occurred while adding user goal.");
             }
         }
+
+        [Authorize]
+        [HttpPost("delete")]
+        [SwaggerOperation(Summary = "Delete user goal", Description = "Delete a user goal by its ID")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteUserGoal([FromBody] int id)
+        {
+            if (id <= 0) return HandleValidationException(new ArgumentException("Invalid user goal ID."));
+            try
+            {
+                var userGoal = await _userGoalsService.GetById(id);
+                if (userGoal == null)
+                {
+                    return HandleValidationException(new ArgumentException("User goal not found."));
+                }
+                await _userGoalsService.Delete(userGoal);
+                return HandleSuccess("User goal deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, "An error occurred while deleting user goal.");
+            }
+        }
     }
 }
