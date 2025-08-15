@@ -15,8 +15,6 @@ namespace TrainingTracker.Infrastructure.Repository
 
         public Task<Exercise> GetByName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be null or empty.", nameof(name));
             var context = _context.CreateDbContext();
             return context.Exercises.AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Name.ToLower() == name);

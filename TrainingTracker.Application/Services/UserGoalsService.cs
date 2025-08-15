@@ -16,7 +16,7 @@ namespace TrainingTracker.Application.Services
         public UserGoalsService(IUserGoalsRepository userGoalsRepository, IUserService userService)
         {
             _userGoalsRepository = userGoalsRepository ?? throw new ArgumentNullException(nameof(userGoalsRepository));
-            _userService = userService;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
         
         public Task Add(UserGoal entity)

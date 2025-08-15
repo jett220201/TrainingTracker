@@ -82,6 +82,8 @@ namespace TrainingTracker.Application.Services
 
         public Task<Exercise> GetByName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be null or empty.", nameof(name));
             return _exercisesRepository.GetByName(name);
         }
 
