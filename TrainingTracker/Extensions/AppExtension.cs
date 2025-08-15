@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.API.GraphQL.Queries;
+using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Repository;
+using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Application.Services;
+using TrainingTracker.Infrastructure.Helpers;
 using TrainingTracker.Infrastructure.Persistence;
 using TrainingTracker.Infrastructure.Repository;
-using TrainingTracker.Application.Interfaces.Helpers;
-using TrainingTracker.Infrastructure.Helpers;
-using TrainingTracker.API.GraphQL.Queries;
 
 namespace TrainingTracker.API.Extensions
 {
@@ -33,7 +33,7 @@ namespace TrainingTracker.API.Extensions
             services.AddScoped<IWorkoutExercisesAssociationsService, WorkoutExercisesAssociationsService>();
             services.AddScoped<IExercisesService, ExercisesService>();
             services.AddScoped<IRecoveryTokensService, RecoveryTokensService>();
-            services.AddScoped<IUserGoalsService, UserGoalsService>();
+            services.AddScoped<IUserGoalsService, UserGoalsService>();            
             services.AddHttpContextAccessor();
             #endregion
 
