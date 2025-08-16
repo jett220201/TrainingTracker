@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.REST.General;
@@ -7,6 +8,7 @@ using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.DTOs.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -14,11 +16,14 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class UserController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, ISecurityHelper securityHelper)
+        public UserController(IUserService userService, ISecurityHelper securityHelper, 
+            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userService = userService;
+            _localizer = stringLocalizer;
         }
 
         [HttpPost("register")]
@@ -37,7 +42,7 @@ namespace TrainingTracker.API.Controllers
                 request.PreferredLanguage = lang;
                 await _userService.Register(request);
 
-                return HandleSuccess("User registered successfully.");
+                return HandleSuccess(_localizer["UserRegisterSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -45,7 +50,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while registering the user.");
+                return HandleException(ex, _localizer["UserRegisterError"]);
             }
         }
 
@@ -63,7 +68,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userService.ChangePassword(request);
-                return HandleSuccess("Password changed successfully.");
+                return HandleSuccess(_localizer["PasswordChangeSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -71,7 +76,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while changing the password.");
+                return HandleException(ex, _localizer["PasswordChangeError"]);
             }
         }
 
@@ -87,7 +92,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userService.ChangePasswordRecovery(request);
-                return HandleSuccess("Password changed successfully.");
+                return HandleSuccess(_localizer["PasswordChangeSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -95,7 +100,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while changing the password.");
+                return HandleException(ex, _localizer["PasswordChangeError"]);
             }
         }
 
@@ -112,7 +117,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userService.RecoverPassword(request);
-                return HandleSuccess("Password recovery email sent successfully.");
+                return HandleSuccess(_localizer["PasswordRecoveryEmailSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -120,7 +125,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while recovering the password.");
+                return HandleException(ex, _localizer["PasswordRecoveryEmailError"]);
             }
         }
 
@@ -138,7 +143,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userService.DeleteAccount(request);
-                return HandleSuccess("Account deleted successfully.");
+                return HandleSuccess(_localizer["DeleteAccountSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -146,7 +151,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while deleting the account.");
+                return HandleException(ex, _localizer["DeleteAccountError"]);
             }
         }
     }

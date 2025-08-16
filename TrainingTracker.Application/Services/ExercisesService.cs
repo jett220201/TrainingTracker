@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Localization;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.REST.Exercise;
@@ -6,16 +7,19 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Services;
 
 namespace TrainingTracker.Application.Services
 {
     public class ExercisesService : IExercisesService
     {
         private readonly IExercisesRepository _exercisesRepository;
+        private readonly IStringLocalizer<ExercisesServiceResource> _localizer;
 
-        public ExercisesService(IExercisesRepository exercisesRepository)
+        public ExercisesService(IExercisesRepository exercisesRepository, IStringLocalizer<ExercisesServiceResource> stringLocalizer)
         {
             _exercisesRepository = exercisesRepository ?? throw new ArgumentNullException(nameof(exercisesRepository));
+            _localizer = stringLocalizer ?? throw new ArgumentNullException(nameof(stringLocalizer));
         }
 
         public Task Add(Exercise entity)
@@ -63,7 +67,7 @@ namespace TrainingTracker.Application.Services
             if (exercise == null) throw new ArgumentNullException(nameof(exercise));
             if (await ExerciseExists(exercise.Name.ToLower(), (MuscleGroup)exercise.MuscleGroup))
             {
-                throw new ValidationException($"An exercise with the name '{exercise.Name}' and muscle group '{Enum.GetName(typeof(MuscleGroup), exercise.MuscleGroup)}' already exists.");
+                throw new ValidationException(_localizer["ExerciseUniqueNameMuscleGroupValidation", exercise.Name, Enum.GetName(typeof(MuscleGroup), exercise.MuscleGroup) ?? ""]);
             }
             var newExercise = new Exercise
             {
@@ -83,7 +87,7 @@ namespace TrainingTracker.Application.Services
         public Task<Exercise> GetByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be null or empty.", nameof(name));
+                throw new ArgumentException(_localizer["ExerciseEmptyName"], nameof(name));
             return _exercisesRepository.GetByName(name);
         }
 

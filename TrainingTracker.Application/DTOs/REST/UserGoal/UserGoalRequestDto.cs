@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.DTOs.REST.UserGoal
 {
@@ -16,7 +17,7 @@ namespace TrainingTracker.Application.DTOs.REST.UserGoal
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Target value must be greater than zero")]
+        [Range(0.01, double.MaxValue, ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "TargetValuePositiveValidation")]
         public decimal TargetValue { get; set; }
 
         [Required]
@@ -29,7 +30,7 @@ namespace TrainingTracker.Application.DTOs.REST.UserGoal
 
         [Required]
         [DataType(DataType.Date)]
-        [FutureDate(ErrorMessage = "The goal date must be in the future")]
+        [FutureDate(ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "GoalDateValidation")]
         public DateOnly GoalDate { get; set; }
     }
 }

@@ -10,10 +10,12 @@
     <PackageReference Include="HotChocolate.Types" Version="15.1.8" />
     <PackageReference Include="HotChocolate.Types.CursorPagination" Version="15.1.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TrainingTracker.Domain\TrainingTracker.Domain.csproj" />
+    <ProjectReference Include="..\TrainingTracker.Localization\TrainingTracker.Localization.csproj" />
   </ItemGroup>
 
 </Project>

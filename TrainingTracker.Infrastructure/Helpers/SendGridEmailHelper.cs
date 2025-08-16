@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using SendGrid.Helpers.Mail;
 using TrainingTracker.Application.Interfaces.Helpers;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Infrastructure.Helpers
 {
@@ -8,10 +10,12 @@ namespace TrainingTracker.Infrastructure.Helpers
     {
         private readonly string _apiKey;
         private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public SendGridEmailHelper(IConfiguration configuration)
+        public SendGridEmailHelper(IConfiguration configuration, IStringLocalizer<SharedResources> stringLocalizer)
         {
             _configuration = configuration;
+            _localizer = stringLocalizer;
             _apiKey = configuration["SendGrid:ApiKey"]
                         ?? throw new ArgumentNullException("Email:ApiKey", "API key for email service is not configured.");
         }
@@ -42,14 +46,14 @@ namespace TrainingTracker.Infrastructure.Helpers
                                     <!-- Body -->
                                     <tr>
                                         <td class=""body"" style=""padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;"">
-                                            Hi {userName} 
+                                            {_localizer["Greetings"]} {userName} 
                                             <br>
                                             {body}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class=""body"" style=""padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;"">
-                                            Always looking out for your physical and mental well-being 💪🧠             
+                                            {_localizer["Slogan"]} 💪🧠             
                                         </td>
                                     </tr>
                                     <!-- Footer -->

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.REST.Exercise;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -12,10 +14,14 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class ExercisesController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer; 
         private readonly IExercisesService _exercisesService;
-        public ExercisesController(IExercisesService exercisesService)
+
+        public ExercisesController(IExercisesService exercisesService, IStringLocalizer<SharedResources> stringLocalizer)
+            : base(stringLocalizer)
         {
             _exercisesService = exercisesService;
+            _localizer = stringLocalizer;
         }
 
         [Authorize]
@@ -31,7 +37,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _exercisesService.AddNewExercise(exercise);
-                return HandleSuccess("Exercise added successfully.");
+                return HandleSuccess(_localizer["AddExerciseSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -39,7 +45,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while adding the exercise.");
+                return HandleException(ex, _localizer["AddExerciseError"]);
             }
         }
     }

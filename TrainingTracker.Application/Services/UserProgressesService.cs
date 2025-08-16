@@ -1,4 +1,5 @@
-﻿using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
+﻿using Microsoft.Extensions.Localization;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.UserGoal;
 using TrainingTracker.Application.DTOs.REST.UserProgress;
@@ -7,6 +8,8 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.Services
 {
@@ -16,14 +19,19 @@ namespace TrainingTracker.Application.Services
         private readonly IUserService _userService;
         private readonly IUserGoalsService _userGoalsService;
         private readonly IFitnessCalculator _fitnessCalculator;
+        private readonly IStringLocalizer<UserProgressesServiceResource> _progressLocalizer;
+        private readonly IStringLocalizer<SharedResources> _sharedLocalizer;
 
         public UserProgressesService(IUserProgressesRepository userProgressesRepository, IUserService userService,
-            IFitnessCalculator fitnessCalculator, IUserGoalsService userGoalsService)
+            IFitnessCalculator fitnessCalculator, IUserGoalsService userGoalsService, 
+            IStringLocalizer<UserProgressesServiceResource> progressLocalizer, IStringLocalizer<SharedResources> sharedLocalizer)
         {
             _userProgressesRepository = userProgressesRepository ?? throw new ArgumentNullException(nameof(userProgressesRepository));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _fitnessCalculator = fitnessCalculator ?? throw new ArgumentNullException(nameof(fitnessCalculator));
             _userGoalsService = userGoalsService ?? throw new ArgumentNullException(nameof(userGoalsService));
+            _progressLocalizer = progressLocalizer ?? throw new ArgumentNullException(nameof(progressLocalizer));
+            _sharedLocalizer = sharedLocalizer ?? throw new ArgumentNullException(nameof(sharedLocalizer));
         }
 
         public Task Add(UserProgress entity)
@@ -71,7 +79,7 @@ namespace TrainingTracker.Application.Services
             var user = await _userService.GetById(userProgress.UserId);
             if (user == null)
             {
-                throw new ArgumentException($"User with ID {userProgress.UserId} does not exist.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             var BFP = _fitnessCalculator.CalculateBFP(userProgress.Weight, (decimal)user.Height / 100, user.Age, user.Gender == Gender.Male ? 1 : 0);
             var BMI = _fitnessCalculator.CalculateBMI(userProgress.Weight, (decimal)user.Height / 100);
@@ -146,7 +154,7 @@ namespace TrainingTracker.Application.Services
             var user = await _userService.GetUserById(userGoalRequest.UserId);
             if (user == null)
             {
-                throw new ArgumentException($"User with ID {userGoalRequest.UserId} does not exist.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
 
             var lastProgress = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault();
@@ -170,7 +178,7 @@ namespace TrainingTracker.Application.Services
                 GoalDirection.Increase => userGoalRequest.TargetValue > currentValue,
                 GoalDirection.Decrease => userGoalRequest.TargetValue < currentValue,
                 GoalDirection.Maintain => Math.Abs(userGoalRequest.TargetValue - currentValue) <= userGoalRequest.TargetValue * 0.02m, // 2% error margin for maintenance goals
-                _ => throw new ArgumentException("Invalid goal direction.")
+                _ => throw new ArgumentException(_progressLocalizer["InvalidGoalDirection"])
             };
 
             string errorMessage = string.Empty;
@@ -178,10 +186,10 @@ namespace TrainingTracker.Application.Services
             {
                 errorMessage = direction switch
                 {
-                    GoalDirection.Increase => $"The target value must be greater than the current value ({currentValue}).",
-                    GoalDirection.Decrease => $"The target value must be less than the current value ({currentValue}).",
-                    GoalDirection.Maintain => $"The target value must be within 2% of the current value ({currentValue}).",
-                    _ => "Invalid goal direction."
+                    GoalDirection.Increase => _progressLocalizer["TargetValueGreater", currentValue],
+                    GoalDirection.Decrease => _progressLocalizer["TargetValueLess", currentValue],
+                    GoalDirection.Maintain => _progressLocalizer["TargetValueWithin", currentValue],
+                    _ => _progressLocalizer["InvalidGoalDirection"]
                 };
             }
 

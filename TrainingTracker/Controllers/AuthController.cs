@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.Login;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -13,18 +15,21 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
         private readonly IRefreshTokensService _refreshTokensService;
         private readonly ISecurityHelper _securityHelper;
 
         public AuthController(IConfiguration configuration, IUserService userService,
-            IRefreshTokensService refreshTokensService, ISecurityHelper securityHelper)
+            IRefreshTokensService refreshTokensService, ISecurityHelper securityHelper,
+            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _configuration = configuration;
             _userService = userService;
             _securityHelper = securityHelper;
             _refreshTokensService = refreshTokensService;
+            _localizer = stringLocalizer;
         }
 
         #region Methods
@@ -50,11 +55,11 @@ namespace TrainingTracker.API.Controllers
                     // try with email if username not found
                     user = await _userService.GetUserByEmail(request.Username ?? "");
                     if (user == null)
-                        return HandleUnauthorized("Invalid username or password.");
+                        return HandleUnauthorized(_localizer["UserNotFound"]);
                 }
 
                 if (user.LockOutEnd.HasValue && user.LockOutEnd > DateTime.UtcNow)
-                    return HandleUnauthorized($"Account locked. Try again after {user.LockOutEnd.Value.ToLocalTime()}");
+                    return HandleUnauthorized(_localizer["AccountLocked", user.LockOutEnd.Value.ToLocalTime()]);
 
                 if (!_securityHelper.VerifyPassword(request.Password ?? "", user.PasswordHash ?? ""))
                 {
@@ -67,7 +72,7 @@ namespace TrainingTracker.API.Controllers
 
                     await _userService.Update(user);
 
-                    return HandleUnauthorized("Invalid username or password.");
+                    return HandleUnauthorized(_localizer["InvalidUsernamePassword"]);
                 }
 
                 user.FailedLoginAttempts = 0;
@@ -83,7 +88,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while logging in.");
+                return HandleException(ex, _localizer["LoggingError"]);
             }
         }
 
@@ -100,13 +105,13 @@ namespace TrainingTracker.API.Controllers
             var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
-                return HandleUnauthorized("Invalid or expired refresh token.");
+                return HandleUnauthorized(_localizer["InvalidRefreshToken"]);
             }
 
             var user = await _userService.GetById(existingToken.UserId);
             if (user == null)
             {
-                return HandleUnauthorized("User not found.");
+                return HandleUnauthorized(_localizer["UserNotFound"]);
             }
 
             // Revoke the old refresh token
@@ -134,13 +139,13 @@ namespace TrainingTracker.API.Controllers
             var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
-                return HandleUnauthorized("Invalid or expired refresh token.");
+                return HandleUnauthorized(_localizer["InvalidRefreshToken"]);
             }
 
             // Revoke the refresh token
             existingToken.RevokedAt = DateTime.UtcNow;
             await _refreshTokensService.Update(existingToken);
-            return HandleSuccess("Logged out successfully.");
+            return HandleSuccess(_localizer["LoggedOutSuccess"]);
         }
 
         private async Task<string> CreateRefreshToken(User user)

@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.DTOs.REST.Exercise
 {
     public class ExerciseDto
     {
         [Required]
-        [StringLength(50, ErrorMessage = "Name cannot be longer than 50 characters.")]
+        [StringLength(50, ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "Name50MaxLength")]
         public string Name { get; set; } = string.Empty;
         
         [Required]
-        [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
+        [StringLength(500, ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "Description500MaxLength")]
         public string Description { get; set; } = string.Empty;
         
         [Required]

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.UserProgress;
 using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -11,10 +13,13 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class UserProgressController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IUserProgressesService _userProgressService;
-        public UserProgressController(IUserProgressesService userProgressService)
+        public UserProgressController(IUserProgressesService userProgressService,
+            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userProgressService = userProgressService;
+            _localizer = stringLocalizer;
         }
 
         [Authorize]
@@ -30,11 +35,11 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _userProgressService.AddNewUserProgress(userProgress);
-                return HandleSuccess("User progress added successfully.");
+                return HandleSuccess(_localizer["AddUserProgressSuccess"]);
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while adding user progress.");
+                return HandleException(ex, _localizer["AddUserProgressError"]);
             }
         }
     }

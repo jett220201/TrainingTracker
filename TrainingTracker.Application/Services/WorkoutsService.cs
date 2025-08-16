@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Localization;
+using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
@@ -7,6 +8,8 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.Services
 {
@@ -16,14 +19,19 @@ namespace TrainingTracker.Application.Services
         private readonly IWorkoutExercisesAssociationsService _workoutExercisesAssociationsService;
         private readonly IExercisesService _exercisesService;
         private readonly IUserService _usersService;
+        private readonly IStringLocalizer<WorkoutsServiceResource> _workoutLocalizer;
+        private readonly IStringLocalizer<SharedResources> _sharedLocalizer;
 
         public WorkoutsService(IWorkoutsRepository workoutsRepository, IWorkoutExercisesAssociationsService workoutExercisesAssociationsService, 
-            IExercisesService exercisesService, IUserService usersService)
+            IExercisesService exercisesService, IUserService usersService, IStringLocalizer<WorkoutsServiceResource> workoutLocalizer,
+            IStringLocalizer<SharedResources> sharedLocalizer)
         {
             _workoutsRepository = workoutsRepository ?? throw new ArgumentNullException(nameof(workoutsRepository));
             _workoutExercisesAssociationsService = workoutExercisesAssociationsService ?? throw new ArgumentNullException(nameof(workoutExercisesAssociationsService));
             _exercisesService = exercisesService ?? throw new ArgumentNullException(nameof(exercisesService));
             _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
+            _workoutLocalizer = workoutLocalizer ?? throw new ArgumentNullException(nameof(workoutLocalizer));
+            _sharedLocalizer = sharedLocalizer ?? throw new ArgumentNullException(nameof(sharedLocalizer));
         }
 
         public Task Add(Workout entity)
@@ -70,14 +78,14 @@ namespace TrainingTracker.Application.Services
         {
             if(_usersService.GetById(workout.UserId) == null)
             {
-                throw new ValidationException($"User with ID {workout.UserId} does not exist.");
+                throw new ValidationException(_sharedLocalizer["UserNotFound"]);
             }
 
             var exercises = await _exercisesService.GetAll();
 
             if(!exercises.Any(e => workout.ExercisesAssociation.Any(we => we.ExerciseId == e.Id)))
             {
-                throw new ValidationException("One or more exercises in the workout do not exist.");
+                throw new ValidationException(_workoutLocalizer["ExercisesNotFound"]);
             }
 
             var newWorkout = new Workout
@@ -134,7 +142,7 @@ namespace TrainingTracker.Application.Services
             var user = await _usersService.GetUserById(idUser);
             if (user == null)
             {
-                throw new ArgumentException("User not found.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             var workouts = await GetWorkoutsByUser(idUser);
             if (!string.IsNullOrEmpty(search))
@@ -149,11 +157,11 @@ namespace TrainingTracker.Application.Services
             var workoutToEdit = await _workoutsRepository.GetById(workout.Id ?? 0);
             if (workoutToEdit == null)
             {
-                throw new ValidationException($"Workout with ID {workout.Id} does not exist.");
+                throw new ValidationException(_sharedLocalizer["WorkoutNotFound"]);
             }
             if (await _usersService.GetById(workout.UserId) == null)
             {
-                throw new ValidationException($"User with ID {workout.UserId} does not exist.");
+                throw new ValidationException(_sharedLocalizer["UserNotFound"]);
             }
             // Update workout details
             workoutToEdit.Name = workout.Name;

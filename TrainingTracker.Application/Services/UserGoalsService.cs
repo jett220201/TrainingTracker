@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Localization;
+using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.UserGoal;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.DTOs.REST.UserGoal;
@@ -6,6 +7,7 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.Services
 {
@@ -13,10 +15,13 @@ namespace TrainingTracker.Application.Services
     {
         private readonly IUserGoalsRepository _userGoalsRepository;
         private readonly IUserService _userService;
-        public UserGoalsService(IUserGoalsRepository userGoalsRepository, IUserService userService)
+        private readonly IStringLocalizer<SharedResources> _localizer;
+
+        public UserGoalsService(IUserGoalsRepository userGoalsRepository, IUserService userService, IStringLocalizer<SharedResources> stringLocalizer)
         {
             _userGoalsRepository = userGoalsRepository ?? throw new ArgumentNullException(nameof(userGoalsRepository));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _localizer = stringLocalizer ?? throw new ArgumentNullException(nameof(stringLocalizer));
         }
         
         public Task Add(UserGoal entity)
@@ -29,7 +34,7 @@ namespace TrainingTracker.Application.Services
             var user = await _userService.GetById(userGoalRequest.UserId);
             if (user == null)
             {
-                throw new ArgumentException($"User with ID {userGoalRequest.UserId} does not exist.");
+                throw new ArgumentException(_localizer["UserNotFound"]);
             }
             var userGoal = new UserGoal
             {
@@ -81,7 +86,7 @@ namespace TrainingTracker.Application.Services
             var user = await _userService.GetUserById(userId);
             if (user == null)
             {
-                throw new ArgumentException("User not found.");
+                throw new ArgumentException(_localizer["UserNotFound"]);
             }
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             var allGoals = await GetAll();
@@ -125,11 +130,11 @@ namespace TrainingTracker.Application.Services
             var userGoalToEdit = await _userGoalsRepository.GetById(userGoalRequest.Id ?? 0);
             if (userGoalToEdit == null)
             {
-                throw new ArgumentException($"User goal with ID {userGoalRequest.Id} does not exist.");
+                throw new ArgumentException(_localizer["UserGoalNotFound"]);
             }
             if (await _userService.GetById(userGoalRequest.UserId) == null)
             {
-                throw new ValidationException($"User with ID {userGoalRequest.UserId} does not exist.");
+                throw new ValidationException(_localizer["UserNotFound"]);
             }
             // Update the user goal properties
             userGoalToEdit.Description = userGoalRequest.Description;

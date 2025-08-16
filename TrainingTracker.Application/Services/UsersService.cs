@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
 using TrainingTracker.Application.DTOs.GraphQL.User;
@@ -10,6 +11,8 @@ using TrainingTracker.Application.Interfaces.Repository;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.Services
 {
@@ -20,15 +23,21 @@ namespace TrainingTracker.Application.Services
         private readonly IRecoveryTokensService _recoveryTokensService;
         private readonly ISecurityHelper _securityHelper;
         private readonly IEmailHelper _emailHelper;
+        private readonly IStringLocalizer<UsersServiceResource> _userLocalizer;
+        private readonly IStringLocalizer<SharedResources> _sharedLocalizer;
 
         public UsersService(IUsersRepository userRepository, IConfiguration configuration,
-            IRecoveryTokensService recoveryTokensService, ISecurityHelper securityHelper, IEmailHelper emailHelper)
+            IRecoveryTokensService recoveryTokensService, ISecurityHelper securityHelper,
+            IEmailHelper emailHelper, IStringLocalizer<UsersServiceResource> userLocalizer,
+            IStringLocalizer<SharedResources> sharedLocalizer)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _securityHelper = securityHelper ?? throw new ArgumentNullException(nameof(securityHelper));
             _recoveryTokensService = recoveryTokensService ?? throw new ArgumentNullException(nameof(recoveryTokensService));
             _emailHelper = emailHelper ?? throw new ArgumentNullException(nameof(emailHelper));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _sharedLocalizer = sharedLocalizer ?? throw new ArgumentNullException(nameof(sharedLocalizer));
+            _userLocalizer = userLocalizer ?? throw new ArgumentNullException(nameof(userLocalizer));
         }
 
         public Task Add(User entity)
@@ -92,17 +101,17 @@ namespace TrainingTracker.Application.Services
             var existingUserByEmail = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
             if (existingUserByName != null)
             {
-                throw new ArgumentException("Username already exists. Please choose a different username.");
+                throw new ArgumentException(_userLocalizer["UsernameAlreadyExists"]);
             }
             if (existingUserByEmail != null)
             {
-                throw new ArgumentException("A user with the same email already exists. Please choose a different email.");
+                throw new ArgumentException(_userLocalizer["EmailAlreadyExists"]);
             }
 
             User user = new User
             {
                 Username = request.Username.Trim().ToLowerInvariant(),
-                PasswordHash = _securityHelper.HashPassword(request.Password),
+                PasswordHash = _securityHelper.HashPassword(request.Password ?? ""),
                 Email = request.Email.Trim().ToLowerInvariant(),
                 Name = request.Name.Trim(),
                 LastName = request.LastName.Trim(),
@@ -124,17 +133,17 @@ namespace TrainingTracker.Application.Services
             var user = await GetUserByUserName(request.Username.Trim().ToLowerInvariant());
             if (user == null)
             {
-                throw new ArgumentException("User not found.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             if (!_securityHelper.VerifyPassword(request.OldPassword ?? "", user.PasswordHash ?? ""))
             {
-                throw new UnauthorizedAccessException("Old password is incorrect.");
+                throw new UnauthorizedAccessException(_userLocalizer["OldPasswordError"]);
             }
             if (_securityHelper.VerifyPassword(request.NewPassword ?? "", user.PasswordHash ?? ""))
             {
-                throw new ArgumentException("The new password must be different from the old password.");
+                throw new ArgumentException(_userLocalizer["SameOldNewPasswordError"]);
             }
-            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword);
+            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword ?? "");
             await Update(user);
         }
 
@@ -143,7 +152,7 @@ namespace TrainingTracker.Application.Services
             var user = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
             if(user == null)
             {
-                throw new ArgumentException("If the email is registered, you will receive a message with instructions");
+                throw new ArgumentException(_userLocalizer["EmailNotRegisteredError"]);
             }
             // Create recovery token
             var recoveryToken = await _recoveryTokensService.AddReturn(new()
@@ -157,13 +166,13 @@ namespace TrainingTracker.Application.Services
             await _emailHelper.SendEmailAsync(
                 user.Name,
                 user.Email,
-                "Password Recovery",                           
-                $"To recover your password, please click the following link: " +
+                _userLocalizer["PasswordRecoveryTitle"],                           
+                $"{_userLocalizer["PasswordRecoveryBody"]}" +
                 $"<br>" +
                 $"<table cellspacing=\"\"0\"\" cellpadding=\"\"0\"\" style=\"\"display: grid; place-items:center; padding-top: 45px;\"\">" +
                 $"<tr>" +
                 $"<td style=\"\"padding: 10px 20px; border-radius: 5px;\"\">" +
-                $"<a href='{_configuration["RecoveryLink"]}{recoveryToken.Token}' style=\"\"border-radius: 6px; background:#122b38; color: white; padding: 10px; text-decoration: none\"\">Recover Password</a>" +
+                $"<a href='{_configuration["RecoveryLink"]}{recoveryToken.Token}' style=\"\"border-radius: 6px; background:#122b38; color: white; padding: 10px; text-decoration: none\"\">{_userLocalizer["RecoverPasswordText"]}</a>" +
                 $"</td>" +
                 $"</tr>" +
                 $"</table>"
@@ -175,11 +184,11 @@ namespace TrainingTracker.Application.Services
             var user = await GetUserByEmail(request.Email.Trim().ToLowerInvariant());
             if (user == null)
             {
-                throw new ArgumentException("User not found.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             if (!_securityHelper.VerifyPassword(request.Password, user.PasswordHash ?? ""))
             {
-                throw new ArgumentException("Old password is incorrect.");
+                throw new ArgumentException(_userLocalizer["OldPasswordError"]);
             }
             await Delete(user);
         }
@@ -209,15 +218,15 @@ namespace TrainingTracker.Application.Services
             var token = await _recoveryTokensService.GetRecoveryTokenByToken(request.Token);
             if (token == null || token.Used || token.ExpiresAt < DateTime.UtcNow)
             {
-                throw new ArgumentException("Invalid or expired recovery token.");
+                throw new ArgumentException(_sharedLocalizer["InvalidRefreshToken"]);
             }
             // Update user password and token status
             var user = await GetById(token.UserId);
             if (_securityHelper.VerifyPassword(request.NewPassword ?? "", user.PasswordHash ?? ""))
             {
-                throw new ArgumentException("The new password must be different from the old password.");
+                throw new ArgumentException(_userLocalizer["SameOldNewPasswordError"]);
             }
-            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword);
+            user.PasswordHash = _securityHelper.HashPassword(request.NewPassword ?? "");
             await Update(user);
             token.Used = true;
             await _recoveryTokensService.Update(token);
@@ -225,8 +234,8 @@ namespace TrainingTracker.Application.Services
             await _emailHelper.SendEmailAsync(
                 user.Name,
                 user.Email,
-                "Password Reset",
-                $"Your password has been successfully changed using the recovery procedure."
+                _userLocalizer["PasswordResetTitle"],
+                _userLocalizer["PasswordResetSuccessText"]
             );
         }
 
@@ -240,7 +249,7 @@ namespace TrainingTracker.Application.Services
             var user = await _userRepository.GetUserById(userId);
             if (user == null)
             {
-                throw new ArgumentException("User not found.");
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
 
             var lastProgress = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault();

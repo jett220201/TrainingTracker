@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.DTOs.REST.UserProgress
 {
@@ -8,7 +9,7 @@ namespace TrainingTracker.Application.DTOs.REST.UserProgress
         public int UserId { get; set; }
         
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Weight must be a positive number.")]
+        [Range(0, double.MaxValue, ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "WeightValidation")]
         public decimal Weight { get; set; }
     }
 }

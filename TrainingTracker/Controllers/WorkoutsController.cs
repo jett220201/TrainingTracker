@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.Workout;
 using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -12,10 +14,13 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class WorkoutsController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IWorkoutsService _workoutsService;
-        public WorkoutsController(IWorkoutsService workoutsService)
+        public WorkoutsController(IWorkoutsService workoutsService, IStringLocalizer<SharedResources> stringLocalizer)
+            : base(stringLocalizer)
         {
             _workoutsService = workoutsService;
+            _localizer = stringLocalizer;
         }
 
         [Authorize]
@@ -30,7 +35,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _workoutsService.AddNewWorkout(workout);
-                return HandleSuccess("Workout added successfully.");
+                return HandleSuccess(_localizer["AddWorkoutSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -38,7 +43,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while adding the workout.");
+                return HandleException(ex, _localizer["AddWorkoutError"]);
             }
         }
 
@@ -50,20 +55,20 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteWorkout([FromBody] int id)
         {
-            if (id <= 0) return HandleValidationException(new ArgumentException("Invalid workout ID."));
+            if (id <= 0) return HandleValidationException(new ArgumentException(_localizer["InvalidWorkoutID"]));
             try
             {
                 var workout = await _workoutsService.GetById(id);
                 if (workout == null)
                 {
-                    return HandleValidationException(new ArgumentException("Workout not found."));
+                    return HandleValidationException(new ArgumentException(_localizer["WorkoutNotFound"]));
                 }
                 await _workoutsService.Delete(workout);
-                return HandleSuccess("Workout deleted successfully.");
+                return HandleSuccess(_localizer["DeleteWorkoutSuccess"]);
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while deleting the workout.");
+                return HandleException(ex, _localizer["DeleteWorkoutError"]);
             }
         }
         
@@ -79,7 +84,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 await _workoutsService.EditWorkout(workout);
-                return HandleSuccess("Workout updated successfully.");
+                return HandleSuccess(_localizer["EditWorkoutSuccess"]);
             }
             catch (ValidationException ex)
             {
@@ -87,7 +92,7 @@ namespace TrainingTracker.API.Controllers
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while editing the workout.");
+                return HandleException(ex, _localizer["EditWorkoutError"]);
             }
         }
     }

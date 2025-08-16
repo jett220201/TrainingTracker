@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Domain.Entities.ENUM;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.DTOs.User
 {
@@ -31,11 +32,11 @@ namespace TrainingTracker.Application.DTOs.User
         public DateOnly DateOfBirth { get; set; }
         
         [Required]
-        [Range(50, 300, ErrorMessage = "Height must be between 50 cm and 300 cm.")]
+        [Range(50, 300, ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "HeightValidation")]
         public int Height { get; set; }
 
         [Required]
-        [EnumDataType(typeof(Gender), ErrorMessage = "Gender must be Male or Female")]
+        [EnumDataType(typeof(Gender), ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "GenderValidation")]
         public int Gender { get; set; }
 
         public string? PreferredLanguage { get; set; }

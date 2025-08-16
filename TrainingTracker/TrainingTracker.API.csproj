@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrainingTracker.Infrastructure\TrainingTracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\TrainingTracker.Localization\TrainingTracker.Localization.csproj" />
   </ItemGroup>
 
 </Project>

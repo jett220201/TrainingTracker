@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.UserGoal;
 using TrainingTracker.Application.Interfaces.Services;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.API.Controllers
 {
@@ -11,12 +13,15 @@ namespace TrainingTracker.API.Controllers
     [Route("api/[controller]")]
     public class UserGoalController : BaseApiController
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IUserGoalsService _userGoalsService;
         private readonly IUserProgressesService _userProgressesService;
-        public UserGoalController(IUserGoalsService userGoalsService, IUserProgressesService userProgressesService)
+        public UserGoalController(IUserGoalsService userGoalsService, IUserProgressesService userProgressesService,
+            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userGoalsService = userGoalsService;
             _userProgressesService = userProgressesService;
+            _localizer = stringLocalizer;
         }
 
         [Authorize]
@@ -37,11 +42,11 @@ namespace TrainingTracker.API.Controllers
                     return HandleValidationException(new ArgumentException(errorMessage));
                 }
                 await _userGoalsService.AddNewUserGoal(userGoalRequest);
-                return HandleSuccess("User goal added successfully.");
+                return HandleSuccess(_localizer["AddUserGoalSuccess"]);
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while adding user goal.");
+                return HandleException(ex, _localizer["AddUserGoalError"]);
             }
         }
 
@@ -53,20 +58,20 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteUserGoal([FromBody] int id)
         {
-            if (id <= 0) return HandleValidationException(new ArgumentException("Invalid user goal ID."));
+            if (id <= 0) return HandleValidationException(new ArgumentException(_localizer["InvalidUserGoalID"]));
             try
             {
                 var userGoal = await _userGoalsService.GetById(id);
                 if (userGoal == null)
                 {
-                    return HandleValidationException(new ArgumentException("User goal not found."));
+                    return HandleValidationException(new ArgumentException(_localizer["UserGoalNotFound"]));
                 }
                 await _userGoalsService.Delete(userGoal);
-                return HandleSuccess("User goal deleted successfully.");
+                return HandleSuccess(_localizer["DeleteUserGoalSuccess"]);
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while deleting user goal.");
+                return HandleException(ex, _localizer["DeleteUserGoalError"]);
             }
         }
 
@@ -87,11 +92,11 @@ namespace TrainingTracker.API.Controllers
                     return HandleValidationException(new ArgumentException(errorMessage));
                 }
                 await _userGoalsService.EditUserGoal(userGoalRequest);
-                return HandleSuccess("User goal edited successfully.");
+                return HandleSuccess(_localizer["EditUserGoalSuccess"]);
             }
             catch (Exception ex)
             {
-                return HandleException(ex, "An error occurred while editing user goal.");
+                return HandleException(ex, _localizer["EditUserGoalError"]);
             }
         }
     }
