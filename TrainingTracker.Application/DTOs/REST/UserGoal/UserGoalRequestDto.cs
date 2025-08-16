@@ -6,8 +6,7 @@ namespace TrainingTracker.Application.DTOs.REST.UserGoal
 {
     public class UserGoalRequestDto
     {
-        [Required]
-        public int UserId { get; set; }
+        public int? UserId { get; set; } // This value is get from claims in the controller
 
         public int? Id { get; set; } // Optional, used for editing existing goals
 

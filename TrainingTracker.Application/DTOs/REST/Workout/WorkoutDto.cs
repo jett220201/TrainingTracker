@@ -6,8 +6,7 @@ namespace TrainingTracker.Application.DTOs.REST.Workout
 {
     public class WorkoutDto : IValidatableObject
     {
-        [Required]
-        public int UserId { get; set; }
+        public int? UserId { get; set; } // This value is get from claims in the controller
 
         public int? Id { get; set; } // Optional, just used for editing existing workouts
 

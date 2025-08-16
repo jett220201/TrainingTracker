@@ -36,6 +36,14 @@ namespace TrainingTracker.API.Controllers
 
             try
             {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                userGoalRequest.UserId = int.Parse(idUser);
                 var (isValid, errorMessage) = await _userProgressesService.IsValidGoal(userGoalRequest);
                 if (!isValid)
                 {
@@ -86,6 +94,14 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return HandleInvalidModelState();
             try
             {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                userGoalRequest.UserId = int.Parse(idUser);
                 var (isValid, errorMessage) = await _userProgressesService.IsValidGoal(userGoalRequest);
                 if (!isValid)
                 {

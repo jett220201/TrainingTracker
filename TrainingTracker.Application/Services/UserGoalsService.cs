@@ -31,14 +31,14 @@ namespace TrainingTracker.Application.Services
 
         public async Task AddNewUserGoal(UserGoalRequestDto userGoalRequest)
         {
-            var user = await _userService.GetById(userGoalRequest.UserId);
+            var user = await _userService.GetById((int)userGoalRequest.UserId);
             if (user == null)
             {
                 throw new ArgumentException(_localizer["UserNotFound"]);
             }
             var userGoal = new UserGoal
             {
-                UserId = userGoalRequest.UserId,
+                UserId = (int)userGoalRequest.UserId,
                 Description = userGoalRequest.Description,
                 TargetValue = userGoalRequest.TargetValue,
                 GoalType = (GoalType)userGoalRequest.GoalType,
@@ -132,7 +132,7 @@ namespace TrainingTracker.Application.Services
             {
                 throw new ArgumentException(_localizer["UserGoalNotFound"]);
             }
-            if (await _userService.GetById(userGoalRequest.UserId) == null)
+            if (await _userService.GetById((int)userGoalRequest.UserId) == null)
             {
                 throw new ValidationException(_localizer["UserNotFound"]);
             }

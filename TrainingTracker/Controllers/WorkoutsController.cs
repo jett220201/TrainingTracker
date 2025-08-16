@@ -34,6 +34,14 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return HandleInvalidModelState();
             try
             {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                workout.UserId = int.Parse(idUser);
                 await _workoutsService.AddNewWorkout(workout);
                 return HandleSuccess(_localizer["AddWorkoutSuccess"]);
             }
@@ -83,6 +91,14 @@ namespace TrainingTracker.API.Controllers
             if (!ModelState.IsValid) return HandleInvalidModelState();
             try
             {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                workout.UserId = int.Parse(idUser);
                 await _workoutsService.EditWorkout(workout);
                 return HandleSuccess(_localizer["EditWorkoutSuccess"]);
             }

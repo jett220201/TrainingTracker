@@ -273,4 +273,7 @@
   <data name="Slogan" xml:space="preserve">
     <value>Siempre buscando tu bienestar físico y mental</value>
   </data>
+  <data name="UserNotAuth" xml:space="preserve">
+    <value>Usuario no autenticado.</value>
+  </data>
 </root>

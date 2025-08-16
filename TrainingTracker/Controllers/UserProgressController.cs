@@ -34,6 +34,14 @@ namespace TrainingTracker.API.Controllers
 
             try
             {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                userProgress.UserId = int.Parse(idUser);
                 await _userProgressService.AddNewUserProgress(userProgress);
                 return HandleSuccess(_localizer["AddUserProgressSuccess"]);
             }

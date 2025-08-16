@@ -76,7 +76,7 @@ namespace TrainingTracker.Application.Services
 
         public async Task AddNewWorkout(WorkoutDto workout)
         {
-            if(_usersService.GetById(workout.UserId) == null)
+            if(_usersService.GetById((int)workout.UserId) == null)
             {
                 throw new ValidationException(_sharedLocalizer["UserNotFound"]);
             }
@@ -90,7 +90,7 @@ namespace TrainingTracker.Application.Services
 
             var newWorkout = new Workout
             {
-                UserId = workout.UserId,
+                UserId = (int)workout.UserId,
                 Name = workout.Name
             };
             newWorkout = await _workoutsRepository.AddReturn(newWorkout);
@@ -159,7 +159,7 @@ namespace TrainingTracker.Application.Services
             {
                 throw new ValidationException(_sharedLocalizer["WorkoutNotFound"]);
             }
-            if (await _usersService.GetById(workout.UserId) == null)
+            if (await _usersService.GetById((int)workout.UserId) == null)
             {
                 throw new ValidationException(_sharedLocalizer["UserNotFound"]);
             }

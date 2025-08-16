@@ -76,7 +76,7 @@ namespace TrainingTracker.Application.Services
 
         public async Task AddNewUserProgress(UserProgressDto userProgress)
         {
-            var user = await _userService.GetById(userProgress.UserId);
+            var user = await _userService.GetById((int)userProgress.UserId);
             if (user == null)
             {
                 throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
@@ -85,7 +85,7 @@ namespace TrainingTracker.Application.Services
             var BMI = _fitnessCalculator.CalculateBMI(userProgress.Weight, (decimal)user.Height / 100);
             var newUserProgress = new UserProgress
             {
-                UserId = userProgress.UserId,
+                UserId = (int)userProgress.UserId,
                 BodyFatPercentage = BFP,
                 BodyMassIndex = BMI,
                 Weight = userProgress.Weight,
@@ -94,7 +94,7 @@ namespace TrainingTracker.Application.Services
             await _userProgressesRepository.Add(newUserProgress);
             
             // Check if the user has any active goals and update them if necessary
-            var userGoals = await _userGoalsService.GetUserGoalsActiveByUser(userProgress.UserId);
+            var userGoals = await _userGoalsService.GetUserGoalsActiveByUser((int)userProgress.UserId);
             if (userGoals.Any())
             {
                 foreach(var goal in userGoals)
@@ -151,7 +151,7 @@ namespace TrainingTracker.Application.Services
         
         public async Task<(bool, string)> IsValidGoal(UserGoalRequestDto userGoalRequest)
         {
-            var user = await _userService.GetUserById(userGoalRequest.UserId);
+            var user = await _userService.GetUserById((int)userGoalRequest.UserId);
             if (user == null)
             {
                 throw new ArgumentException(_sharedLocalizer["UserNotFound"]);

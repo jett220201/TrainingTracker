@@ -475,6 +475,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User not authenticated..
+        /// </summary>
+        public static string UserNotAuth {
+            get {
+                return ResourceManager.GetString("UserNotAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User not found..
         /// </summary>
         public static string UserNotFound {
