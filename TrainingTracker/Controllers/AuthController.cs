@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.Login;
+using TrainingTracker.Application.DTOs.REST.User;
 using TrainingTracker.Application.Interfaces.Helpers;
 using TrainingTracker.Application.Interfaces.Services;
 using TrainingTracker.Domain.Entities.DB;
@@ -146,6 +148,44 @@ namespace TrainingTracker.API.Controllers
             existingToken.RevokedAt = DateTime.UtcNow;
             await _refreshTokensService.Update(existingToken);
             return HandleSuccess(_localizer["LoggedOutSuccess"]);
+        }
+
+        [Authorize]
+        [HttpPost("lang-change")]
+        [SwaggerOperation(Summary = "Change Language", Description = "Change the preferred language of the authenticated user")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ChangeLanguage([FromBody] UserChangeLanguageRequestDto request)
+        {
+            if (!ModelState.IsValid) return HandleInvalidModelState();
+            try
+            {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst("Id")?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+
+                request.UserId = int.Parse(idUser);
+                var user = await _userService.ChangeLanguage(request);
+                // Generate a new JWT token
+                var newToken = _securityHelper.GenerateJwtToken(user, _configuration);
+
+                // Generate a new refresh token
+                var newRefreshToken = await CreateRefreshToken(user);
+                return Ok(new LoginResponseDto { Token = newToken, RefreshToken = newRefreshToken });
+            }
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, _localizer["LanguageChangeError"]);
+            }
         }
 
         private async Task<string> CreateRefreshToken(User user)

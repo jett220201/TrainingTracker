@@ -281,5 +281,17 @@ namespace TrainingTracker.Application.Services
                 }).ToList()
             };
         }
+
+        public async Task<User> ChangeLanguage(UserChangeLanguageRequestDto request)
+        {
+            var user = await _userRepository.GetUserById((int)request.UserId);
+            if (user == null)
+            {
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
+            }
+            user.PreferredLanguage = request.Language.Trim().ToLowerInvariant();
+            await _userRepository.Update(user);
+            return user;
+        }
     }
 }

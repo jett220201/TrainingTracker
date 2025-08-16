@@ -19,5 +19,6 @@ namespace TrainingTracker.Application.Interfaces.Services
         Task<UserGraphQLDto> GetInfoUserById(int id);
         Task<HomeOverviewGraphQLDto> GetHomeInfoByUser(int userId);
         Task ChangePasswordRecovery(UserRecoveryPasswordRequestDto request);
+        Task<User> ChangeLanguage(UserChangeLanguageRequestDto request);
     }
 }
