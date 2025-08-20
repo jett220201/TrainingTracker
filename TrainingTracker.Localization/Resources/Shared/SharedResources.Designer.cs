@@ -340,6 +340,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login successful.
+        /// </summary>
+        public static string LoginSuccess {
+            get {
+                return ResourceManager.GetString("LoginSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one exercise must be included..
         /// </summary>
         public static string MinExercisesValidation {
@@ -363,6 +372,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         public static string MinSetsValidation {
             get {
                 return ResourceManager.GetString("MinSetsValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The refresh token was not sent..
+        /// </summary>
+        public static string MissingRefreshToken {
+            get {
+                return ResourceManager.GetString("MissingRefreshToken", resourceCulture);
             }
         }
         
@@ -408,6 +426,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         public static string PasswordRecoveryEmailSuccess {
             get {
                 return ResourceManager.GetString("PasswordRecoveryEmailSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh process successfully completed..
+        /// </summary>
+        public static string RefreshSuccess {
+            get {
+                return ResourceManager.GetString("RefreshSuccess", resourceCulture);
             }
         }
         

@@ -276,4 +276,13 @@
   <data name="UserNotAuth" xml:space="preserve">
     <value>Usuario no autenticado.</value>
   </data>
+  <data name="LoginSuccess" xml:space="preserve">
+    <value>Inicio de sesión exitoso.</value>
+  </data>
+  <data name="MissingRefreshToken" xml:space="preserve">
+    <value>El token de refresco no fue enviado.</value>
+  </data>
+  <data name="RefreshSuccess" xml:space="preserve">
+    <value>Proceso de refresco realizado con éxito.</value>
+  </data>
 </root>

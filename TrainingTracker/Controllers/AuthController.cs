@@ -38,7 +38,7 @@ namespace TrainingTracker.API.Controllers
 
         [HttpPost("login")]
         [SwaggerOperation(Summary = "User login", Description = "Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes.")]
-        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
@@ -86,7 +86,29 @@ namespace TrainingTracker.API.Controllers
 
                 // Create refresh token
                 var refreshToken = await CreateRefreshToken(user);
-                return Ok(new LoginResponseDto { Token = token, RefreshToken = refreshToken });
+
+                // Set access cookie
+                var accessCookie = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(60)
+                };
+
+                // Set refresh cookie
+                var refreshCookie = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, 
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                };
+
+                Response.Cookies.Append("accessToken", token, accessCookie);
+                Response.Cookies.Append("refreshToken", refreshToken, refreshCookie);
+
+                return Ok(new ApiResponseDto { Message = _localizer["LoginSuccess"] });
             }
             catch (Exception ex)
             {
@@ -97,14 +119,17 @@ namespace TrainingTracker.API.Controllers
         [Authorize]
         [HttpPost("refresh")]
         [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refresh the JWT token using a valid refresh token")]
-        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
+        public async Task<IActionResult> RefreshToken()
         {
-            if (!ModelState.IsValid) return HandleInvalidModelState();
+            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshTokenValue))
+            {
+                return HandleUnauthorized(_localizer["MissingRefreshToken"]);
+            }
 
-            var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
+            var existingToken = await _refreshTokensService.GetByToken(refreshTokenValue);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
                 return HandleUnauthorized(_localizer["InvalidRefreshToken"]);
@@ -125,7 +150,29 @@ namespace TrainingTracker.API.Controllers
 
             // Generate a new refresh token
             var newRefreshToken = await CreateRefreshToken(user);
-            return Ok(new LoginResponseDto{ Token = newToken, RefreshToken = newRefreshToken });
+
+            // Set access cookie
+            var accessCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddMinutes(60)
+            };
+
+            // Set refresh cookie
+            var refreshCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+
+            Response.Cookies.Append("accessToken", newToken, accessCookie);
+            Response.Cookies.Append("refreshToken", newRefreshToken, refreshCookie);
+
+            return Ok(new ApiResponseDto { Message = _localizer["RefreshSuccess"] });
         }
 
         [Authorize]
@@ -134,11 +181,14 @@ namespace TrainingTracker.API.Controllers
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto request)
+        public async Task<IActionResult> Logout()
         {
-            if (!ModelState.IsValid) return HandleInvalidModelState();
+            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshTokenValue))
+            {
+                return HandleUnauthorized(_localizer["MissingRefreshToken"]);
+            }
 
-            var existingToken = await _refreshTokensService.GetByToken(request.RefreshToken);
+            var existingToken = await _refreshTokensService.GetByToken(refreshTokenValue);
             if (existingToken == null || existingToken.ExpiresAt <= DateTime.UtcNow || existingToken.RevokedAt != null)
             {
                 return HandleUnauthorized(_localizer["InvalidRefreshToken"]);
@@ -147,6 +197,11 @@ namespace TrainingTracker.API.Controllers
             // Revoke the refresh token
             existingToken.RevokedAt = DateTime.UtcNow;
             await _refreshTokensService.Update(existingToken);
+
+            // Delete cookies
+            Response.Cookies.Delete("accessToken");
+            Response.Cookies.Delete("refreshToken");
+
             return HandleSuccess(_localizer["LoggedOutSuccess"]);
         }
 
