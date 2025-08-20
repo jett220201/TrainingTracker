@@ -28,15 +28,21 @@ This project has the following structure:
  ┃ ┃ ┣ 📜BaseApiController.cs
  ┃ ┃ ┣ 📜ExercisesController.cs
  ┃ ┃ ┣ 📜UserController.cs
+ ┃ ┃ ┣ 📜UserGoalController.cs
  ┃ ┃ ┣ 📜UserProgressController.cs
  ┃ ┃ ┗ 📜WorkoutsController.cs
  ┃ ┣ 📂Extensions
  ┃ ┃ ┗ 📜AppExtension.cs
  ┃ ┣ 📂GraphQL
  ┃ ┃ ┗ 📂Queries
+ ┃ ┃ ┃ ┣ 📜ExercisesQuery.cs
+ ┃ ┃ ┃ ┣ 📜GoalsQuery.cs
+ ┃ ┃ ┃ ┣ 📜HomeQuery.cs
  ┃ ┃ ┃ ┣ 📜UserProgressQuery.cs
  ┃ ┃ ┃ ┣ 📜UserQuery.cs
  ┃ ┃ ┃ ┗ 📜WorkoutQuery.cs
+ ┃ ┣ 📂Middlewares
+ ┃ ┃ ┗ 📜UserLanguageMiddleware.cs
  ┃ ┣ 📂Properties
  ┃ ┃ ┗ 📜launchSettings.json
  ┃ ┣ 📜appsettings.Development.json
@@ -49,15 +55,24 @@ This project has the following structure:
  ┣ 📂TrainingTracker.Application
  ┃ ┣ 📂DTOs
  ┃ ┃ ┣ 📂GraphQL
- ┃ ┃ ┃ ┣ 📂Exercise
- ┃ ┃ ┃ ┃ ┗ 📜ExerciseGraphQLDto.cs
- ┃ ┃ ┃ ┣ 📂User
- ┃ ┃ ┃ ┃ ┗ 📜UserGraphQLDto.cs
- ┃ ┃ ┃ ┣ 📂UserProgress
- ┃ ┃ ┃ ┃ ┗ 📜UserProgressGraphQLDto.cs
- ┃ ┃ ┃ ┗ 📂Workout
- ┃ ┃ ┃ ┃ ┣ 📜WorkoutExercisesAssociationGraphQLDto.cs
- ┃ ┃ ┃ ┃ ┗ 📜WorkoutGraphQLDto.cs
+ ┃ ┃ ┃ ┣ 📂Entities
+ ┃ ┃ ┃ ┃ ┣ 📂Exercise
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ExerciseGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ExerciseConnection.cs
+ ┃ ┃ ┃ ┃ ┣ 📂User
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┣ 📂UserGoal
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserGoalGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┣ 📂UserProgress
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserProgressGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┗ 📂Workout
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜WorkoutExercisesAssociationGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜WorkoutGraphQLDto.cs
+ ┃ ┃ ┃ ┣ 📂ViewModels
+ ┃ ┃ ┃ ┃ ┣ 📜GoalsOverviewGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┣ 📜HomeOverviewGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┣ 📜UserProgressOverviewGraphQLDto.cs
+ ┃ ┃ ┃ ┃ ┗ 📜WorkoutsOverviewGraphQLDto.cs
  ┃ ┃ ┗ 📂REST
  ┃ ┃ ┃ ┣ 📂Exercise
  ┃ ┃ ┃ ┃ ┗ 📜ExerciseDto.cs
@@ -70,11 +85,14 @@ This project has the following structure:
  ┃ ┃ ┃ ┃ ┣ 📜LogoutRequestDto.cs
  ┃ ┃ ┃ ┃ ┗ 📜RefreshTokenRequestDto.cs
  ┃ ┃ ┃ ┣ 📂User
+ ┃ ┃ ┃ ┃ ┣ 📜UserChangeLanguageRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserChangePasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserDeleteAccountRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserRecoverPasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserRecoveryPasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┗ 📜UserRegistrationRequestDto.cs
+ ┃ ┃ ┃ ┣ 📂UserGoal
+ ┃ ┃ ┃ ┃ ┗ 📜UserGoalRequestDto.cs
  ┃ ┃ ┃ ┣ 📂UserProgress
  ┃ ┃ ┃ ┃ ┗ 📜UserProgressDto.cs
  ┃ ┃ ┃ ┗ 📂Workout
@@ -83,12 +101,14 @@ This project has the following structure:
  ┃ ┣ 📂Interfaces
  ┃ ┃ ┣ 📂Helpers
  ┃ ┃ ┃ ┣ 📜IEmailHelper.cs
+ ┃ ┃ ┃ ┣ 📜IFitnessCalculator.cs
  ┃ ┃ ┃ ┗ 📜ISecurityHelper.cs
  ┃ ┃ ┣ 📂Repository
  ┃ ┃ ┃ ┣ 📜IExercisesRepository.cs
  ┃ ┃ ┃ ┣ 📜IGenericRepository.cs
  ┃ ┃ ┃ ┣ 📜IRecoveryTokensRepository.cs
  ┃ ┃ ┃ ┣ 📜IRefreshTokensRepository.cs
+ ┃ ┃ ┃ ┣ 📜IUserGoalsRepository.cs
  ┃ ┃ ┃ ┣ 📜IUserProgressesRepository.cs
  ┃ ┃ ┃ ┣ 📜IUsersRepository.cs
  ┃ ┃ ┃ ┣ 📜IWorkoutExercisesAssociationsRepository.cs
@@ -98,6 +118,7 @@ This project has the following structure:
  ┃ ┃ ┃ ┣ 📜IGenericService.cs
  ┃ ┃ ┃ ┣ 📜IRecoveryTokensService.cs
  ┃ ┃ ┃ ┣ 📜IRefreshTokensService.cs
+ ┃ ┃ ┃ ┣ 📜IUserGoalsService.cs
  ┃ ┃ ┃ ┣ 📜IUserProgressesService.cs
  ┃ ┃ ┃ ┣ 📜IUserService.cs
  ┃ ┃ ┃ ┣ 📜IWorkoutExercisesAssociationsService.cs
@@ -106,6 +127,7 @@ This project has the following structure:
  ┃ ┃ ┣ 📜ExercisesService.cs
  ┃ ┃ ┣ 📜RecoveryTokensService.cs
  ┃ ┃ ┣ 📜RefreshTokensService.cs
+ ┃ ┃ ┣ 📜UserGoalsService.cs
  ┃ ┃ ┣ 📜UserProgressesService.cs
  ┃ ┃ ┣ 📜UsersService.cs
  ┃ ┃ ┣ 📜WorkoutExercisesAssociationsService.cs
@@ -118,10 +140,15 @@ This project has the following structure:
  ┃ ┃ ┃ ┣ 📜RecoveryToken.cs
  ┃ ┃ ┃ ┣ 📜RefreshToken.cs
  ┃ ┃ ┃ ┣ 📜User.cs
+ ┃ ┃ ┃ ┣ 📜UserGoal.cs
  ┃ ┃ ┃ ┣ 📜UserProgress.cs
  ┃ ┃ ┃ ┣ 📜Workout.cs
  ┃ ┃ ┃ ┗ 📜WorkoutExercisesAssociation.cs
  ┃ ┃ ┗ 📂ENUM
+ ┃ ┃ ┃ ┣ 📜Gender.cs
+ ┃ ┃ ┃ ┣ 📜GoalDirection.cs
+ ┃ ┃ ┃ ┣ 📜GoalStatus.cs
+ ┃ ┃ ┃ ┣ 📜GoalType.cs
  ┃ ┃ ┃ ┗ 📜MuscleGroup.cs
  ┃ ┗ 📜TrainingTracker.Domain.csproj
  ┣ 📂TrainingTracker.Infrastructure
@@ -141,6 +168,16 @@ This project has the following structure:
  ┃ ┃ ┣ 📜20250805001947_RemoveScheduleColumnInWorkout.Designer.cs
  ┃ ┃ ┣ 📜20250807215614_AddRecoveryTokensTable.cs
  ┃ ┃ ┣ 📜20250807215614_AddRecoveryTokensTable.Designer.cs
+ ┃ ┃ ┣ 📜20250809193749_AddNewColumnsForUser.cs
+ ┃ ┃ ┣ 📜20250809193749_AddNewColumnsForUser.Designer.cs
+ ┃ ┃ ┣ 📜20250809194551_AddNewTableUserGoals.cs
+ ┃ ┃ ┣ 📜20250809194551_AddNewTableUserGoals.Designer.cs
+ ┃ ┃ ┣ 📜20250809202453_FixDataTypeForDates.cs
+ ┃ ┃ ┣ 📜20250809202453_FixDataTypeForDates.Designer.cs
+ ┃ ┃ ┣ 📜20250813004821_AddGoalDirectionColumnToUserGoalTable.cs
+ ┃ ┃ ┣ 📜20250813004821_AddGoalDirectionColumnToUserGoalTable.Designer.cs
+ ┃ ┃ ┣ 📜20250814015154_AddPrefLangForUserTable.cs
+ ┃ ┃ ┣ 📜20250814015154_AddPrefLangForUserTable.Designer.cs
  ┃ ┃ ┗ 📜CoreDBContextModelSnapshot.cs
  ┃ ┣ 📂Persistence
  ┃ ┃ ┗ 📜CoreDBContext.cs
@@ -149,11 +186,27 @@ This project has the following structure:
  ┃ ┃ ┣ 📜GenericRepository.cs
  ┃ ┃ ┣ 📜RecoveryTokensRepository.cs
  ┃ ┃ ┣ 📜RefreshTokensRepository.cs
+ ┃ ┃ ┣ 📜UserGoalsRepository.cs
  ┃ ┃ ┣ 📜UserProgressesRepository.cs
  ┃ ┃ ┣ 📜UsersRepository.cs
  ┃ ┃ ┣ 📜WorkoutExercisesAssociationsRepository.cs
  ┃ ┃ ┗ 📜WorkoutsRepository.cs
  ┃ ┗ 📜TrainingTracker.Infrastructure.csproj
+ ┣ 📂TrainingTracker.Localization
+ ┃ ┣ 📂Resources
+ ┃ ┃ ┣ 📂Services
+ ┃ ┃ ┃ ┣ 📜ExercisesServiceResource.es.resx
+ ┃ ┃ ┃ ┣ 📜ExercisesServiceResource.resx
+ ┃ ┃ ┃ ┣ 📜UserProgressesServiceResource.es.resx
+ ┃ ┃ ┃ ┣ 📜UserProgressesServiceResource.resx
+ ┃ ┃ ┃ ┣ 📜UsersServiceResource.es.resx
+ ┃ ┃ ┃ ┣ 📜UsersServiceResource.resx
+ ┃ ┃ ┃ ┣ 📜WorkoutsServiceResource.es.resx
+ ┃ ┃ ┃ ┗ 📜WorkoutsServiceResource.resx
+ ┃ ┃ ┗ 📂Shared
+ ┃ ┃ ┃ ┣ 📜SharedResources.es.resx
+ ┃ ┃ ┃ ┗ 📜SharedResources.resx
+ ┃ ┗ 📜TrainingTracker.Localization.csproj
  ┣ 📜.gitattributes
  ┣ 📜.gitignore
  ┣ 📜LICENSE.txt
@@ -205,21 +258,33 @@ This separation improves the modularity, maintainability and testability of the 
 | `POST`  | `/api/auth/login`      | `AuthController`  | Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes. | Username and Password | JWT token and Refresh token |
 | `POST`  | `/api/auth/refresh`    | `AuthController`  | Refresh the JWT token using a valid refresh token. | Refresh token | JWT token and Refresh token |
 | `POST`  | `/api/auth/logout`     | `AuthController`  | Revoke the refresh token to log out the user  | Refresh token | Success message |
+| `POST`  | `/api/auth/lang-change`     | `AuthController`  | Change the preferred language of the authenticated user  | Preferred language short name | JWT token and Refresh token |
 | `POST`  | `/api/exercises/add`   | `ExercisesController` | Add a new exercise to the system  | Name, Description and muscle group | Success message |
-| `POST`  | `/api/user/register`   | `UserController`  | Register a new user in the application | Username, name, last name, email, password | Success message |
+| `POST`  | `/api/user/register`   | `UserController`  | Register a new user in the application | Username, name, last name, email, password, gender, height, date of birth and preferred language | Success message |
 | `POST`  | `/api/user/change-password` | `UserController`  | Change the password of the authenticated user  | Username, current password and new passsword | Success message |
 | `POST`  | `/api/user/change-password-recovery` | `UserController` | Change the password using a recovery token  | Recovery token and new password | Success message |
 | `POST`  | `/api/user/recover-password`  | `UserController` | Send a password recovery email to the user | Email | Success message |
 | `POST`  | `/api/user/delete`     | `UserController` | Delete the authenticated user's account   | Email and password | Success message |
+| `POST`  | `/api/usergoal/add`     | `UserGoalController` | Add a new registry with details of the user goal   | Description, target value, type, direction and goal date | Success message |
+| `POST`  | `/api/usergoal/delete`     | `UserGoalController` | Delete a user goal by its ID   | Goal ID | Success message |
+| `POST`  | `/api/usergoal/edit`     | `UserGoalController` | Edit an existing user goal   | Description, target value, type, direction and goal date | Success message |
 | `POST`  | `/api/userprogress/add` | `UserProgressController` | Add a new registry with details of the user progress | User ID, Body fat percentage, user's weight | Success message |
-| `POST`  | `/api/workouts/add`    | `WorkoutsController` | Add a new workout to the system | User ID, name, list of exercises with # repetitions, #sets, weight, exercise ID | Success message |
+| `POST`  | `/api/workouts/add`    | `WorkoutsController` | Add a new workout to the system | User ID, name, list of exercises with # repetitions, #sets, weight, exercise ID and time of rest | Success message |
+| `POST`  | `/api/workouts/delete`    | `WorkoutsController` | Delete a workout by its ID | Workout ID | Success message |
+| `POST`  | `/api/workouts/edit`    | `WorkoutsController` | Edit an existing workout | User ID, name, list of exercises with # repetitions, #sets, weight, exercise ID and time of rest | Success message |
 
 **GraphQL**
-| Type     | Name                 | Arguments     | Description                          |
-|----------|----------------------|---------------|--------------------------------------|
-| `Query`  | `userInfoById`       | `id: Int`     | Returns all basic user information.  |
-| `Query`  | `userProgressByUser` | `idUser: Int` | Returns the user's progress history. |
-| `Query`  | `workoutsByUser`     | `idUser: Int` | Returns the list of user's workouts. |
+| Type     | Name                 | Arguments       | Description                          |
+|----------|----------------------|-----------------|--------------------------------------|
+| `Query`  | `userInfoById`       | `none`*         | Returns all basic user information.  |
+| `Query`  | `userProgressByUser` | `none`*         | Returns the user's progress history. |
+| `Query`  | `workoutsByUser`     | `search: String [nullable]`* | Returns the list of user's workouts. |
+| `Query`  | `userInfo`           | `none`*         | Returns the basic info for home view. |
+| `Query`  | `exercises`          | `muscleGroup: Int [nullable], search: String [nullable], first: Int [nullable], after: String [nullable]`         | Returns the list of exercises that match the search arguments. |
+| `Query`  | `goalsByUser`        | `search: String [nullable]`*         | Returns the list of goals by user that match the search argument. |
+
+> [!NOTE]
+> Arguments marked with * has the userId argument, but this is acquired from claims.
 
 ## 🗂️ Database model
 The following diagram explain how the database is defined:
@@ -227,7 +292,6 @@ The following diagram explain how the database is defined:
 
 ## 🧠 Future features
 - Develop a modern frontend that displays platform information
-- Develop functionality to handle multiple languages
 - Develop periodic tasks that clean data from the database
 - Deploy the platform!
 
