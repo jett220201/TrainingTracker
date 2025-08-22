@@ -12,7 +12,7 @@ namespace TrainingTracker.API.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             // Default culture to use if no language is specified
-            var defaultCulture = new CultureInfo("en-US");
+            var defaultCulture = new CultureInfo("en");
             // Set the default culture for the application
             var culture = defaultCulture;
             // Check if the Accept-Language header is present
