@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.Login;
 using TrainingTracker.Application.DTOs.REST.User;
@@ -91,8 +93,8 @@ namespace TrainingTracker.API.Controllers
                 var accessCookie = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
+                    Secure = false,
+                    SameSite = SameSiteMode.None,
                     Expires = DateTime.UtcNow.AddMinutes(60)
                 };
 
@@ -100,8 +102,8 @@ namespace TrainingTracker.API.Controllers
                 var refreshCookie = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, 
-                    SameSite = SameSiteMode.Strict,
+                    Secure = false, 
+                    SameSite = SameSiteMode.None,
                     Expires = DateTime.UtcNow.AddDays(7)
                 };
 
@@ -155,8 +157,8 @@ namespace TrainingTracker.API.Controllers
             var accessCookie = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
+                Secure = false,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddMinutes(60)
             };
 
@@ -164,8 +166,8 @@ namespace TrainingTracker.API.Controllers
             var refreshCookie = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
+                Secure = false,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(7)
             };
 
@@ -173,6 +175,28 @@ namespace TrainingTracker.API.Controllers
             Response.Cookies.Append("refreshToken", newRefreshToken, refreshCookie);
 
             return Ok(new ApiResponseDto { Message = _localizer["RefreshSuccess"] });
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        [SwaggerOperation(Summary = "Get Authenticated User", Description = "Retrieve details of the currently authenticated user")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        public async Task<UserBasicResponseDto> GetUserInfo()
+        {
+            // Get the user ID from the claims
+            var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+            {
+                return null;
+            }
+            var user = await _userService.GetById(int.Parse(idUser));
+            return new UserBasicResponseDto
+            {
+                FullName = user.Name + " " + user.LastName,
+                Gender = user.Gender
+            };
         }
 
         [Authorize]
@@ -218,7 +242,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 // Get the user ID from the claims
-                var idUser = User.FindFirst("Id")?.Value;
+                var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
                 {
                     return HandleUnauthorized(_localizer["UserNotAuth"]);

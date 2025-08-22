@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.UserGoal;
 using TrainingTracker.Application.Interfaces.Services;
@@ -37,7 +38,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 // Get the user ID from the claims
-                var idUser = User.FindFirst("Id")?.Value;
+                var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
                 {
                     return HandleUnauthorized(_localizer["UserNotAuth"]);
@@ -95,7 +96,7 @@ namespace TrainingTracker.API.Controllers
             try
             {
                 // Get the user ID from the claims
-                var idUser = User.FindFirst("Id")?.Value;
+                var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
                 {
                     return HandleUnauthorized(_localizer["UserNotAuth"]);
