@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TrainingTracker.Localization.Resources.Shared;
 
 namespace TrainingTracker.Application.DTOs.User
 {
@@ -9,12 +10,14 @@ namespace TrainingTracker.Application.DTOs.User
         public string? Username { get; set; }
 
         [Required]
-        [MinLength(10)]
+        [MinLength(8)]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$",
+            ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "PasswordValidation")]
         public string? NewPassword { get; set; }
 
         [Required]
-        [MinLength(10)]
+        [MinLength(8)]
         [DataType(DataType.Password)]
         public string? OldPassword { get; set; }
     }

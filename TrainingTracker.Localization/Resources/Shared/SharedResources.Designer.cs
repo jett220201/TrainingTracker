@@ -430,6 +430,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character..
+        /// </summary>
+        public static string PasswordValidation {
+            get {
+                return ResourceManager.GetString("PasswordValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh process successfully completed..
         /// </summary>
         public static string RefreshSuccess {

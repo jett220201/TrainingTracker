@@ -8,7 +8,7 @@ namespace TrainingTracker.Application.DTOs.REST.Login
         [MinLength(3)]
         public string? Username { get; set; }
         [Required]
-        [MinLength(10)]
+        [MinLength(8)]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
     }

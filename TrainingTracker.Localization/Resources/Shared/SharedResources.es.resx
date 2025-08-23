@@ -285,4 +285,7 @@
   <data name="RefreshSuccess" xml:space="preserve">
     <value>Proceso de refresco realizado con éxito.</value>
   </data>
+  <data name="PasswordValidation" xml:space="preserve">
+    <value>La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.</value>
+  </data>
 </root>
