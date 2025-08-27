@@ -149,5 +149,23 @@ namespace TrainingTracker.Localization.Resources.Services {
                 return ResourceManager.GetString("UsernameAlreadyExists", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your account in FitTracker has been created!  Now you can start your fitness journey and reach that desired goal, let&apos;s go!.
+        /// </summary>
+        public static string WelcomeMessageBody {
+            get {
+                return ResourceManager.GetString("WelcomeMessageBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to FitTracker!.
+        /// </summary>
+        public static string WelcomeMessageSubject {
+            get {
+                return ResourceManager.GetString("WelcomeMessageSubject", resourceCulture);
+            }
+        }
     }
 }

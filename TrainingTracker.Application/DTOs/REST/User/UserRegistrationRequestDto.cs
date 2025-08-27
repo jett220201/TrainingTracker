@@ -39,7 +39,7 @@ namespace TrainingTracker.Application.DTOs.User
 
         [Required]
         [EnumDataType(typeof(Gender), ErrorMessageResourceType = typeof(SharedResources), ErrorMessageResourceName = "GenderValidation")]
-        public int Gender { get; set; }
+        public Gender Gender { get; set; }
 
         public string? PreferredLanguage { get; set; }
     }

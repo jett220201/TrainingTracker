@@ -147,4 +147,10 @@
   <data name="UsernameAlreadyExists" xml:space="preserve">
     <value>Nombre de usuario en uso. Por favor escoge un nombre de usuario diferente.</value>
   </data>
+  <data name="WelcomeMessageSubject" xml:space="preserve">
+    <value>Bienvenid@ a FitTracker!</value>
+  </data>
+  <data name="WelcomeMessageBody" xml:space="preserve">
+    <value>Tu cuenta en FitTracker ha sido creada! Ahora puedes empezar tu travesía en tu cambio físico, vamos!</value>
+  </data>
 </root>

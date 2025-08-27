@@ -39,7 +39,7 @@ namespace TrainingTracker.Infrastructure.Helpers
                                 <table class=""content"" width=""600"" cellspacing=""0"" cellpadding=""0"" style=""border-collapse: collapse; border: 1px solid #cccccc;"">
                                     <!-- Header -->
                                     <tr>
-                                        <td class=""header"" style=""background-color: #122b38; padding: 40px; text-align: center; color: white; font-size: 24px;"">
+                                        <td class=""header"" style=""background-color: #00a6f4; padding: 40px; text-align: center; color: white; font-size: 24px;"">
                                             {subject}
                                         </td>
                                     </tr>
@@ -58,7 +58,7 @@ namespace TrainingTracker.Infrastructure.Helpers
                                     </tr>
                                     <!-- Footer -->
                                     <tr>
-                                        <td class=""footer"" style=""background-color: #122b38; padding: 40px; text-align: center; color: white; font-size: 14px;"">
+                                        <td class=""footer"" style=""background-color: #00a6f4; padding: 40px; text-align: center; color: white; font-size: 14px;"">
                                             Copyright &copy; {DateTime.Now.Year.ToString()} | {_configuration["SendGrid:FromName"]}
                                         </td>
                                     </tr>

@@ -118,13 +118,15 @@ namespace TrainingTracker.Application.Services
                 CreatedAt = DateTime.UtcNow,
                 DateOfBirth = request.DateOfBirth,
                 Height = request.Height,
-                Gender = (Gender)request.Gender,
+                Gender = request.Gender,
                 FailedLoginAttempts = 0,
                 LockOutEnd = null,
                 PreferredLanguage = request.PreferredLanguage?.Trim().ToLowerInvariant() ?? "en"
             };
 
             await Add(user);
+            // Send welcome email
+            await _emailHelper.SendEmailAsync(user.Name, user.Email, _userLocalizer["WelcomeMessageSubject"], _userLocalizer["WelcomeMessageBody"]);
             return user;
         }
 
