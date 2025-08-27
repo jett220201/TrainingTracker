@@ -31,7 +31,12 @@ namespace TrainingTracker.API.Middlewares
                     }
                 }
             }
-
+            else if (context.Request.Headers.TryGetValue("Accept-Language", out var langHeader))
+            {
+                var lang = langHeader.ToString().Split(',').FirstOrDefault();
+                if (!string.IsNullOrEmpty(lang))
+                    culture = new CultureInfo(lang);
+            }
             // Set the current culture and UI culture
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
