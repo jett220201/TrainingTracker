@@ -93,7 +93,7 @@ namespace TrainingTracker.API.Controllers
                 var accessCookie = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false,
+                    Secure = true,
                     SameSite = SameSiteMode.None,
                     Expires = DateTime.UtcNow.AddMinutes(60)
                 };
@@ -102,7 +102,7 @@ namespace TrainingTracker.API.Controllers
                 var refreshCookie = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false, 
+                    Secure = true,
                     SameSite = SameSiteMode.None,
                     Expires = DateTime.UtcNow.AddDays(7)
                 };
