@@ -1,7 +1,7 @@
 ﻿using HotChocolate.Authorization;
+using System.Security.Claims;
 using TrainingTracker.Application.DTOs.GraphQL.ViewModels;
 using TrainingTracker.Application.Interfaces.Services;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace TrainingTracker.API.GraphQL.Queries
 {
@@ -11,7 +11,7 @@ namespace TrainingTracker.API.GraphQL.Queries
         [Authorize]
         public async Task<HomeOverviewGraphQLDto> GetUserInfo([Service] IUserService userService, [Service] IHttpContextAccessor httpContextAccessor)
         {
-            var userIdClaims = httpContextAccessor.HttpContext?.User.FindFirst(JwtRegisteredClaimNames.Sub);
+            var userIdClaims = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaims == null || !int.TryParse(userIdClaims.Value, out int userId))
             {
                 throw new ArgumentException("User ID not found in claims.");
