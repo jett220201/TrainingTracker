@@ -118,7 +118,6 @@ namespace TrainingTracker.API.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("refresh")]
         [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refresh the JWT token using a valid refresh token")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
