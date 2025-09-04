@@ -37,6 +37,7 @@ namespace TrainingTracker.Infrastructure.Repository
                 .AsNoTracking()
                 .Include(u => u.Workouts)
                 .ThenInclude(w => w.WorkoutExercises)
+                .ThenInclude(we => we.Exercise)
                 .Include(u => u.Goals)
                 .Include(u => u.UserProgresses)
                 .FirstOrDefaultAsync(u => u.Id == id);

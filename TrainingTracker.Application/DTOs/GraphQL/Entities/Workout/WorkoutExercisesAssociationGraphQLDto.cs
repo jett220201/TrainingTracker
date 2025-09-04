@@ -8,6 +8,6 @@ namespace TrainingTracker.Application.DTOs.GraphQL.Entities.Workout
         public int Repetitions { get; set; }
         public int Sets { get; set; }
         public decimal Weight { get; set; }
-        public ExerciseGraphQLDto Exercises { get; set; } = new ExerciseGraphQLDto();
+        public ExerciseGraphQLDto Exercise { get; set; } = new ExerciseGraphQLDto();
     }
 }

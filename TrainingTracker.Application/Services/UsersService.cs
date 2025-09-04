@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
+using TrainingTracker.Application.DTOs.GraphQL.Entities.Exercise;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.UserProgress;
 using TrainingTracker.Application.DTOs.GraphQL.Entities.Workout;
 using TrainingTracker.Application.DTOs.GraphQL.User;
@@ -279,6 +280,10 @@ namespace TrainingTracker.Application.Services
                         Sets = we.Sets,
                         Repetitions = we.Repetitions,
                         Weight = we.Weight,
+                        Exercise = new ExerciseGraphQLDto
+                        {
+                            MuscleGroup = (int)we.Exercise.MuscleGroup,
+                        }
                     }).ToList(),
                 }).ToList()
             };

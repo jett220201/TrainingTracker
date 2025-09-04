@@ -125,7 +125,7 @@ namespace TrainingTracker.Application.Services
                     Sets = we.Sets,
                     Repetitions = we.Repetitions,
                     Weight = we.Weight,
-                    Exercises = new ExerciseGraphQLDto
+                    Exercise = new ExerciseGraphQLDto
                     {
                         Id = we.Exercise.Id,
                         Name = we.Exercise.Name,
