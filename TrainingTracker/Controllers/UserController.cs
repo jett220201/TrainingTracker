@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +28,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [HttpPost("register")]
+        [EnableRateLimiting("publicEndpoints")]
         [SwaggerOperation(Summary = "Register", Description = "Register a new user in the application")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
@@ -55,6 +57,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("change-password")]
         [SwaggerOperation(Summary = "Change Password", Description = "Change the password of the authenticated user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -81,6 +84,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [HttpPost("change-password-recovery")]
+        [EnableRateLimiting("publicEndpoints")]
         [SwaggerOperation(Summary = "Change Password via Recovery", Description = "Change the password using a recovery token")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
@@ -105,6 +109,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [HttpPost("recover-password")]
+        [EnableRateLimiting("publicEndpoints")]
         [SwaggerOperation(Summary = "Recover Password", Description = "Send a password recovery email to the user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
@@ -130,6 +135,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpDelete("delete")]
         [SwaggerOperation(Summary = "Delete Account", Description = "Delete the authenticated user's account")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

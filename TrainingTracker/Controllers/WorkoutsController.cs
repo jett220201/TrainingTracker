@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new workout", Description = "Add a new workout to the system")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -57,6 +59,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("delete")]
         [SwaggerOperation(Summary = "Delete workout", Description = "Delete a workout by its ID")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -82,6 +85,7 @@ namespace TrainingTracker.API.Controllers
         }
         
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("edit")]
         [SwaggerOperation(Summary = "Edit workout", Description = "Edit an existing workout")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

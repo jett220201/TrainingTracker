@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Globalization;
 using System.Text;
+using System.Threading.RateLimiting;
 using TrainingTracker.API.Extensions;
 using TrainingTracker.API.Middlewares;
 using TrainingTracker.Localization.Resources.Shared;
@@ -39,6 +42,32 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
         });
+});
+
+// Rate limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("publicEndpoints", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? Guid.NewGuid().ToString(),
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(5),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    options.AddPolicy("privateEndpoints", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context?.User?.Identity?.Name ?? context?.Connection.RemoteIpAddress?.ToString() ?? Guid.NewGuid().ToString(),
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
 });
 
 // Add controllers
@@ -136,7 +165,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-    
+
+// Configure rate limiting for graphql endpoint
+app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/graphql"),
+    appBuilder => appBuilder.UseRateLimiter(new RateLimiterOptions
+    {
+        OnRejected = async (context, cancellationToken) =>
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
+        },
+        GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        {
+            var user = httpContext.User.Identity?.Name ?? 
+                httpContext.Connection.RemoteIpAddress?.ToString() ?? Guid.NewGuid().ToString();
+            return RateLimitPartition.GetFixedWindowLimiter(user, _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = httpContext.User.Identity?.IsAuthenticated == true ? 100 : 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            });
+        })
+    }));
+
 app.UseCors(corsPolicyName);
 
 app.UseHttpsRedirection();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -26,6 +27,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new user goal", Description = "Add a new registry with details of the user goal")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -60,6 +62,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("delete")]
         [SwaggerOperation(Summary = "Delete user goal", Description = "Delete a user goal by its ID")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -85,6 +88,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("edit")]
         [SwaggerOperation(Summary = "Edit user goal", Description = "Edit an existing user goal")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

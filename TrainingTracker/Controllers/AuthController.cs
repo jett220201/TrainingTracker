@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +40,7 @@ namespace TrainingTracker.API.Controllers
         #region Methods
 
         [HttpPost("login")]
+        [EnableRateLimiting("publicEndpoints")]
         [SwaggerOperation(Summary = "User login", Description = "Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes.")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
@@ -119,6 +121,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [HttpPost("refresh")]
+        [EnableRateLimiting("publicEndpoints")]
         [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refresh the JWT token using a valid refresh token")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
@@ -156,7 +159,7 @@ namespace TrainingTracker.API.Controllers
             var accessCookie = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,
+                Secure = true,
                 SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddMinutes(60)
             };
@@ -165,7 +168,7 @@ namespace TrainingTracker.API.Controllers
             var refreshCookie = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,
+                Secure = true,
                 SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(7)
             };
@@ -177,6 +180,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpGet("me")]
         [SwaggerOperation(Summary = "Get Authenticated User", Description = "Retrieve details of the currently authenticated user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -199,6 +203,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("logout")]
         [SwaggerOperation(Summary = "Logout", Description = "Revoke the refresh token to log out the user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
@@ -229,6 +234,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("lang-change")]
         [SwaggerOperation(Summary = "Change Language", Description = "Change the preferred language of the authenticated user")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

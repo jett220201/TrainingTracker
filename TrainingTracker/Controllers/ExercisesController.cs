@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new exercise", Description = "Add a new exercise to the system")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]

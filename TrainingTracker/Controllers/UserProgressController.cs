@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -24,6 +25,7 @@ namespace TrainingTracker.API.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
         [HttpPost("add")]
         [SwaggerOperation(Summary = "Add new user progress", Description = "Add a new registry with details of the user progress")]
         [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
