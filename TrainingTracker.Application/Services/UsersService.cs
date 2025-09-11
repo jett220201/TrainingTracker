@@ -136,7 +136,9 @@ namespace TrainingTracker.Application.Services
             var user = await GetUserByUserName(request.Username.Trim().ToLowerInvariant());
             if (user == null)
             {
-                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
+                // try with email if username not found
+                user = await GetUserByEmail(request.Username ?? "");
+                if(user == null) throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             if (!_securityHelper.VerifyPassword(request.OldPassword ?? "", user.PasswordHash ?? ""))
             {
