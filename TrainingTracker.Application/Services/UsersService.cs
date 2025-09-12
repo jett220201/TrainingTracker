@@ -133,12 +133,10 @@ namespace TrainingTracker.Application.Services
 
         public async Task ChangePassword(UserChangePasswordRequestDto request)
         {
-            var user = await GetUserByUserName(request.Username.Trim().ToLowerInvariant());
+            var user = await GetById((int)request.UserId);
             if (user == null)
             {
-                // try with email if username not found
-                user = await GetUserByEmail(request.Username ?? "");
-                if(user == null) throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
             }
             if (!_securityHelper.VerifyPassword(request.OldPassword ?? "", user.PasswordHash ?? ""))
             {

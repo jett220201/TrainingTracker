@@ -5,9 +5,7 @@ namespace TrainingTracker.Application.DTOs.User
 {
     public class UserChangePasswordRequestDto
     {
-        [Required]
-        [MinLength(3)]
-        public string? Username { get; set; }
+        public int? UserId { get; set; } // This value is get from claims in the controller
 
         [Required]
         [MinLength(8)]
