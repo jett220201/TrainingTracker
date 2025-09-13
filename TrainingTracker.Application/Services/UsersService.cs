@@ -199,7 +199,7 @@ namespace TrainingTracker.Application.Services
         public async Task<UserGraphQLDto> GetInfoUserById(int id)
         {
             var user = await _userRepository.GetUserById(id);
-
+            var lastProgress = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault();
             return new UserGraphQLDto
             {
                 Id = user.Id,
@@ -212,7 +212,9 @@ namespace TrainingTracker.Application.Services
                 Gender = user.Gender,
                 WorkoutsCount = user.Workouts.Count,
                 ActiveGoalsCount = user.Goals.Count(g => !g.IsAchieved),
-                CurrentWeight = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault()?.Weight ?? 0
+                CurrentWeight = lastProgress?.Weight ?? 0,
+                CurrentBodyFatPercentage = lastProgress?.BodyFatPercentage ?? 0,
+                CurrentBodyMassIndex = lastProgress?.BodyMassIndex ?? 0,
             };
         }
 

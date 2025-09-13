@@ -15,5 +15,7 @@ namespace TrainingTracker.Application.DTOs.GraphQL.User
         public int Height { get; set; }
         public Gender Gender { get; set; }
         public decimal CurrentWeight { get; set; }
+        public decimal CurrentBodyFatPercentage { get; set; }
+        public decimal CurrentBodyMassIndex { get; set; }
     }
 }
