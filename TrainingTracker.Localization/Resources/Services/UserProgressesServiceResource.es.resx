@@ -129,4 +129,7 @@
   <data name="TargetValueWithin" xml:space="preserve">
     <value>El valor objetivo debe estar dentro del 2% del valor actual {0}.</value>
   </data>
+  <data name="UserWithNoProgress" xml:space="preserve">
+    <value>No fue posible encontrar el último progreso de este usuario.</value>
+  </data>
 </root>

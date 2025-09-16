@@ -116,6 +116,29 @@ namespace TrainingTracker.Application.Services
             }
         }
 
+        public async Task UpdateLastProgress(int idUser)
+        {
+            var user = await _userService.GetById(idUser);
+            if (user == null)
+            {
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
+            }
+            var lastProgress = await _userProgressesRepository.GetLastProgressByUser(idUser);
+            if(lastProgress == null)
+            {
+                throw new ArgumentNullException(_progressLocalizer["UserWithNoProgress"]);
+            }
+            // Calculate new values
+            var BFP = _fitnessCalculator.CalculateBFP(lastProgress.Weight, (decimal)user.Height / 100, user.Age, user.Gender == Gender.Male ? 1 : 0);
+            var BMI = _fitnessCalculator.CalculateBMI(lastProgress.Weight, (decimal)user.Height / 100);
+
+            // Update values
+            lastProgress.BodyFatPercentage = BFP;
+            lastProgress.BodyMassIndex = BMI;
+
+            await Update(lastProgress);
+        }
+
         public async Task<UserProgressOverviewGraphQLDto> GetUserProgressByUser(int idUser)
         {
             var progressList = (await _userProgressesRepository.GetUserProgressByUser(idUser))

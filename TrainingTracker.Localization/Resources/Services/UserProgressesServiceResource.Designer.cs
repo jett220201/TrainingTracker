@@ -95,5 +95,14 @@ namespace TrainingTracker.Localization.Resources.Services {
                 return ResourceManager.GetString("TargetValueWithin", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last progress not found..
+        /// </summary>
+        public static string UserWithNoProgress {
+            get {
+                return ResourceManager.GetString("UserWithNoProgress", resourceCulture);
+            }
+        }
     }
 }

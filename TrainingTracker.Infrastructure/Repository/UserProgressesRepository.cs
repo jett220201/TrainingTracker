@@ -21,5 +21,11 @@ namespace TrainingTracker.Infrastructure.Repository
                 .ToListAsync();
         }
 
+        public async Task<UserProgress> GetLastProgressByUser(int idUser)
+        {
+            var context = await _context.CreateDbContextAsync();
+            return await context.UserProgresses.OrderBy(x => x.Id)
+                .LastOrDefaultAsync(up => up.UserId == idUser);
+        }
     }
 }

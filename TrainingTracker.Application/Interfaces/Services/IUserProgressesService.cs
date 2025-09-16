@@ -10,5 +10,6 @@ namespace TrainingTracker.Application.Interfaces.Services
         Task AddNewUserProgress(UserProgressDto userProgress);
         Task<UserProgressOverviewGraphQLDto> GetUserProgressByUser(int idUser);
         Task<(bool, string)> IsValidGoal(UserGoalRequestDto userGoalRequest);
+        Task UpdateLastProgress(int idUser);
     }
 }
