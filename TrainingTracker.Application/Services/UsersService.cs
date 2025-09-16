@@ -302,5 +302,21 @@ namespace TrainingTracker.Application.Services
             await _userRepository.Update(user);
             return user;
         }
+
+        public async Task EditUser(UserEditRequestDto request)
+        {
+            // Get user
+            var user = await _userRepository.GetById((int)request.UserId);
+            if (user == null)
+            {
+                throw new ArgumentException(_sharedLocalizer["UserNotFound"]);
+            }
+            // Set new values and update
+            user.Name = request.Name;
+            user.LastName = request.LastName;
+            user.Height = request.Height;
+            user.Gender = request.Gender;
+            await Update(user);
+        }
     }
 }

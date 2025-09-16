@@ -13,6 +13,7 @@ namespace TrainingTracker.Application.Interfaces.Services
         Task<User> GetUserByEmail(string email);
         Task<User> GetUserById(int id);
         Task<User> Register(UserRegistrationRequestDto request);
+        Task EditUser(UserEditRequestDto request);
         Task ChangePassword(UserChangePasswordRequestDto request);
         Task RecoverPassword(UserRecoverPasswordRequestDto request);
         Task DeleteAccount(UserDeleteAccountRequestDto request);

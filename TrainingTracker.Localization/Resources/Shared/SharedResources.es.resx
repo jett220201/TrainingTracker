@@ -288,4 +288,7 @@
   <data name="PasswordValidation" xml:space="preserve">
     <value>La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.</value>
   </data>
+  <data name="UserEditSuccess" xml:space="preserve">
+    <value>Usuario editado exitosamente.</value>
+  </data>
 </root>

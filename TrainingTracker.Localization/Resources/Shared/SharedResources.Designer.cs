@@ -502,6 +502,15 @@ namespace TrainingTracker.Localization.Resources.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User edited successfully..
+        /// </summary>
+        public static string UserEditSuccess {
+            get {
+                return ResourceManager.GetString("UserEditSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Goal not found..
         /// </summary>
         public static string UserGoalNotFound {

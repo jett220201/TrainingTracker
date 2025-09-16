@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using TrainingTracker.Application.DTOs.REST.General;
 using TrainingTracker.Application.DTOs.REST.User;
@@ -21,12 +22,15 @@ namespace TrainingTracker.API.Controllers
     {
         private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IUserService _userService;
+        private readonly IUserProgressesService _userProgressService;
 
         public UserController(IUserService userService, ISecurityHelper securityHelper, 
-            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
+            IStringLocalizer<SharedResources> stringLocalizer, IUserProgressesService userProgressService) 
+            : base(stringLocalizer)
         {
             _userService = userService;
             _localizer = stringLocalizer;
+            _userProgressService = userProgressService;
         }
 
         [HttpPost("register")]
@@ -89,6 +93,40 @@ namespace TrainingTracker.API.Controllers
             catch (Exception ex)
             {
                 return HandleException(ex, _localizer["PasswordChangeError"]);
+            }
+        }
+
+        [Authorize]
+        [EnableRateLimiting("privateEndpoints")]
+        [HttpPost("edit")]
+        [SwaggerOperation(Summary = "Edit User", Description = "Edit user information")]
+        [ProducesResponseType(typeof(ApiResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EditUser([FromBody] UserEditRequestDto request)
+        {
+            if (!ModelState.IsValid) return HandleInvalidModelState();
+            try
+            {
+                // Get the user ID from the claims
+                var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(idUser) || !int.TryParse(idUser, out _))
+                {
+                    return HandleUnauthorized(_localizer["UserNotAuth"]);
+                }
+                request.UserId = int.Parse(idUser);
+                await _userService.EditUser(request);
+                await _userProgressService.UpdateLastProgress((int)request.UserId);
+                return Ok(new ApiResponseDto { Message = _localizer["UserEditSuccess"] });
+            }
+            catch (ValidationException ex)
+            {
+                return HandleValidationException(ex);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex, _localizer["LanguageChangeError"]);
             }
         }
 
