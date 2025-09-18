@@ -8,10 +8,10 @@ namespace TrainingTracker.API.GraphQL.Queries
     public class ExercisesQuery
     {
         [Authorize]
-        public async Task<ExercisesConnection> GetExercisesAsync([Service] IExercisesService exercisesService,
-            int? muscleGroup = null, string? search = null, int? first = null, string? after = null)
+        public async Task<ExercisesConnection> GetExercisesAsync([Service] IExercisesService exercisesService, int? muscleGroup = null, string? search = null, 
+            int? first = null, int? last = null, string? after = null, string? before = null)
         {
-            return await exercisesService.GetExercisesAsync(muscleGroup, search, first, after);
+            return await exercisesService.GetExercisesAsync(muscleGroup, search, first, last, after, before);
         }
     }
 }

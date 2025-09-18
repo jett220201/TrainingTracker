@@ -8,6 +8,7 @@ namespace TrainingTracker.Application.Interfaces.Services
     {
         Task AddNewExercise(ExerciseDto exercise);
         Task<Exercise> GetByName(string name);
-        Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, int? first = null, string? after = null);
+        Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, 
+            int? first = null, int? last = null, string? after = null, string? before = null);
     }
 }

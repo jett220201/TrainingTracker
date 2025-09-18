@@ -91,7 +91,7 @@ namespace TrainingTracker.Application.Services
             return _exercisesRepository.GetByName(name);
         }
 
-        public async Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, int? first = null, string? after = null)
+        public async Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, int? first = null, int? last = null, string? after = null, string? before = null)
         {
             var exercises = await _exercisesRepository.GetAll();
 
@@ -104,7 +104,9 @@ namespace TrainingTracker.Application.Services
                 query = query.Where(e => e.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
                                       || e.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
 
-            // Decode cursor
+            int totalCount = query.Count();
+
+            // Decode 'after' cursor
             int startIndex = 0;
             if (!string.IsNullOrEmpty(after))
             {
@@ -112,20 +114,50 @@ namespace TrainingTracker.Application.Services
                 if (int.TryParse(decoded, out int pos))
                     startIndex = pos + 1;
             }
+            
+            // Decode 'before' cursor
+            int? endIndex = null;
+            if (!string.IsNullOrEmpty(before))
+            {
+                var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(before));
+                if (int.TryParse(decoded, out int pos))
+                    endIndex = pos;
+            }
 
-            // Apply pagination
-            var items = query
-                .Skip(startIndex)
-                .Take(first ?? 10)
-                .Select(ex => new ExerciseGraphQLDto
-                {
-                    Id = ex.Id,
-                    Name = ex.Name,
-                    Description = ex.Description,
-                    MuscleGroup = (int)ex.MuscleGroup,
-                    MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
-                })
-                .ToList();
+            List<ExerciseGraphQLDto> items;
+
+            if(last != null && endIndex != null) // Prev page
+            {
+                int skip = Math.Max(0, endIndex.Value - last.Value);
+                items = query
+                    .Skip(skip)
+                    .Take(last ?? 12)
+                    .Select(ex => new ExerciseGraphQLDto
+                    {
+                        Id = ex.Id,
+                        Name = ex.Name,
+                        Description = ex.Description,
+                        MuscleGroup = (int)ex.MuscleGroup,
+                        MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
+                    })
+                    .ToList();
+                startIndex = skip;
+            }
+            else // Next page
+            {
+                items = query
+                    .Skip(startIndex)
+                    .Take(first ?? 12)
+                    .Select(ex => new ExerciseGraphQLDto
+                    {
+                        Id = ex.Id,
+                        Name = ex.Name,
+                        Description = ex.Description,
+                        MuscleGroup = (int)ex.MuscleGroup,
+                        MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
+                    })
+                    .ToList();
+            }
 
             // Create edges with cursors
             var edges = items.Select((exercise, index) =>
@@ -140,7 +172,9 @@ namespace TrainingTracker.Application.Services
             }).ToList();
 
             // Check for next page
-            bool hasNextPage = query.Count() > (startIndex + items.Count);
+            bool hasNextPage = endIndex == null
+                ? (startIndex + items.Count) < totalCount
+                : endIndex < totalCount;
 
             var pageInfo = new PageInfo
             {
