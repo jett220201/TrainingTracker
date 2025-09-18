@@ -37,7 +37,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: corsPolicyName,
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173")
+            policy.WithOrigins(builder.Configuration["FrontEndURL"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -166,6 +166,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(corsPolicyName);
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 // Configure rate limiting for graphql endpoint
 app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/graphql"),
     appBuilder => appBuilder.UseRateLimiter(new RateLimiterOptions
@@ -177,7 +185,7 @@ app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/graphql"),
         },
         GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
         {
-            var user = httpContext.User.Identity?.Name ?? 
+            var user = httpContext.User.Identity?.Name ??
                 httpContext.Connection.RemoteIpAddress?.ToString() ?? Guid.NewGuid().ToString();
             return RateLimitPartition.GetFixedWindowLimiter(user, _ => new FixedWindowRateLimiterOptions
             {
@@ -188,14 +196,6 @@ app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/graphql"),
             });
         })
     }));
-
-app.UseCors(corsPolicyName);
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
 
 app.UseMiddleware<UserLanguageMiddleware>();
 
