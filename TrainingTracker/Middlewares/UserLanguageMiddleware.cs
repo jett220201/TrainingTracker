@@ -16,7 +16,13 @@ namespace TrainingTracker.API.Middlewares
             // Set the default culture for the application
             var culture = defaultCulture;
             // Check if the Accept-Language header is present
-            if (context.User.Identity?.IsAuthenticated == true)
+            if (context.Request.Headers.TryGetValue("Accept-Language", out var langHeader))
+            {
+                var lang = langHeader.ToString().Split(',').FirstOrDefault();
+                if (!string.IsNullOrEmpty(lang))
+                    culture = new CultureInfo(lang);
+            }
+            else if (context.User.Identity?.IsAuthenticated == true)
             {
                 var langClaim = context.User.FindFirst("lang")?.Value;
                 if (!string.IsNullOrEmpty(langClaim))
@@ -30,12 +36,6 @@ namespace TrainingTracker.API.Middlewares
                         culture = defaultCulture; // Fallback to default if the culture is not found
                     }
                 }
-            }
-            else if (context.Request.Headers.TryGetValue("Accept-Language", out var langHeader))
-            {
-                var lang = langHeader.ToString().Split(',').FirstOrDefault();
-                if (!string.IsNullOrEmpty(lang))
-                    culture = new CultureInfo(lang);
             }
             // Set the current culture and UI culture
             CultureInfo.CurrentCulture = culture;
