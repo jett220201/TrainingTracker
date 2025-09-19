@@ -198,7 +198,8 @@ namespace TrainingTracker.API.Controllers
             return new UserBasicResponseDto
             {
                 FullName = user.Name + " " + user.LastName,
-                Gender = user.Gender
+                Gender = user.Gender,
+                Language = user.PreferredLanguage
             };
         }
 
