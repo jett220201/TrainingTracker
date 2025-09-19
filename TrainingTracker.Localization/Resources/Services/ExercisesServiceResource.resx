@@ -117,10 +117,160 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Arms_BarbellCurl_Description" xml:space="preserve">
+    <value>Elbow flexion with a barbell from the waist to the chest.</value>
+  </data>
+  <data name="Arms_BarbellCurl_Name" xml:space="preserve">
+    <value>Barbell Curl</value>
+  </data>
+  <data name="Arms_ConcentrationCurl_Description" xml:space="preserve">
+    <value>Performed while seated, with the elbow resting on the leg for a more controlled movement.</value>
+  </data>
+  <data name="Arms_ConcentrationCurl_Name" xml:space="preserve">
+    <value>Concentration Curl</value>
+  </data>
+  <data name="Arms_HammerCurl_Description" xml:space="preserve">
+    <value>With dumbbells held vertically, flex the arms.</value>
+  </data>
+  <data name="Arms_HammerCurl_Name" xml:space="preserve">
+    <value>Hammer Curl</value>
+  </data>
+  <data name="Arms_OverheadTricepsExtension_Description" xml:space="preserve">
+    <value>With a dumbbell or bar behind your head, extend your elbows upward.</value>
+  </data>
+  <data name="Arms_OverheadTricepsExtension_Name" xml:space="preserve">
+    <value>Overhead Triceps Extension</value>
+  </data>
+  <data name="Arms_TricepDips_Description" xml:space="preserve">
+    <value>Lower your body between two bars or with the support of a bench, using your triceps.</value>
+  </data>
+  <data name="Arms_TricepDips_Name" xml:space="preserve">
+    <value>Tricep Dips</value>
+  </data>
+  <data name="Arms_TricepsPushdown_Description" xml:space="preserve">
+    <value>With a high pulley and rope or bar, push down by extending your elbows.</value>
+  </data>
+  <data name="Arms_TricepsPushdown_Name" xml:space="preserve">
+    <value>Triceps Pushdown</value>
+  </data>
+  <data name="Back_BarbellRow_Description" xml:space="preserve">
+    <value>Row a barbell toward your abdomen with your torso inclined, working your middle and lower back.</value>
+  </data>
+  <data name="Back_BarbellRow_Name" xml:space="preserve">
+    <value>Barbell Row</value>
+  </data>
+  <data name="Back_LatPulldown_Description" xml:space="preserve">
+    <value>Pull a bar from above to your chest, ideal for your back muscles if you can't do pull-ups.</value>
+  </data>
+  <data name="Back_LatPulldown_Name" xml:space="preserve">
+    <value>Lat Pulldown</value>
+  </data>
+  <data name="Back_PullUps_Description" xml:space="preserve">
+    <value>Hang from a bar and lift your body with your arms, activating your back muscles, biceps, and trapezius muscles.</value>
+  </data>
+  <data name="Back_PullUps_Name" xml:space="preserve">
+    <value>Pull-Ups</value>
+  </data>
+  <data name="Back_SeatedCableRow_Description" xml:space="preserve">
+    <value>Sitting down, pull a pulley with both hands toward your abdomen.</value>
+  </data>
+  <data name="Back_SeatedCableRow_Name" xml:space="preserve">
+    <value>Seated Cable Row</value>
+  </data>
+  <data name="Chest_BenchPress_Description" xml:space="preserve">
+    <value>A compound exercise where you push a weighted barbell upward from your chest, working your pectorals, triceps, and shoulders.</value>
+  </data>
+  <data name="Chest_BenchPress_Name" xml:space="preserve">
+    <value>Bench Press</value>
+  </data>
+  <data name="Chest_ChestFly_Name" xml:space="preserve">
+    <value>Chest Fly</value>
+  </data>
+  <data name="Chest_ChestFly_Description" xml:space="preserve">
+    <value>Using dumbbells or a machine, you open and close your arms as if hugging a tree, focusing on the pectorals.</value>
+  </data>
+  <data name="Chest_InclineDumbbellPress_Description" xml:space="preserve">
+    <value>Similar to the bench press, but on an incline bench to emphasize the upper chest.</value>
+  </data>
+  <data name="Chest_InclineDumbbellPress_Name" xml:space="preserve">
+    <value>Incline Dumbbell Press</value>
+  </data>
+  <data name="Chest_PushUp_Description" xml:space="preserve">
+    <value>Using your body weight, you lower and raise your torso from the floor, activating your chest, triceps, and core.</value>
+  </data>
+  <data name="Chest_PushUp_Name" xml:space="preserve">
+    <value>Push Up</value>
+  </data>
+  <data name="Core_Crunches_Description" xml:space="preserve">
+    <value>Partial elevation of the torso from the floor.</value>
+  </data>
+  <data name="Core_Crunches_Name" xml:space="preserve">
+    <value>Crunches</value>
+  </data>
+  <data name="Core_LegRaises_Description" xml:space="preserve">
+    <value>Controlled elevation of the legs while lying down to work the lower abdominals.</value>
+  </data>
+  <data name="Core_LegRaises_Name" xml:space="preserve">
+    <value>Leg Raises</value>
+  </data>
+  <data name="Core_Plank_Description" xml:space="preserve">
+    <value>Static position supported on elbows and feet, activates the entire core.</value>
+  </data>
+  <data name="Core_Plank_Name" xml:space="preserve">
+    <value>Plank</value>
+  </data>
+  <data name="Core_RussianTwists_Description" xml:space="preserve">
+    <value>Sitting on the floor, rotate the torso from side to side with or without weight.</value>
+  </data>
+  <data name="Core_RussianTwists_Name" xml:space="preserve">
+    <value>Russian Twists</value>
+  </data>
   <data name="ExerciseEmptyName" xml:space="preserve">
     <value>The exercise name cannot be null or empty.</value>
   </data>
   <data name="ExerciseUniqueNameMuscleGroupValidation" xml:space="preserve">
     <value>An exercise with the same name {0} and muscle group {1} already exists.</value>
+  </data>
+  <data name="Legs_LegCurl_Description" xml:space="preserve">
+    <value>On a machine, bend your legs toward your glutes to work your hamstrings.</value>
+  </data>
+  <data name="Legs_LegCurl_Name" xml:space="preserve">
+    <value>Leg Curl</value>
+  </data>
+  <data name="Legs_LegPress_Description" xml:space="preserve">
+    <value>On a machine, platforms are pushed with the legs against resistance.</value>
+  </data>
+  <data name="Legs_LegPress_Name" xml:space="preserve">
+    <value>Leg Press</value>
+  </data>
+  <data name="Legs_Lunges_Description" xml:space="preserve">
+    <value>Take a long step forward or backward, lowering your knee, working your quadriceps, glutes, and stability.</value>
+  </data>
+  <data name="Legs_Lunges_Name" xml:space="preserve">
+    <value>Lunges</value>
+  </data>
+  <data name="Legs_Squats_Description" xml:space="preserve">
+    <value>Controlled lowering of the body from a standing position to a squatting position, working the quadriceps, glutes, and core.</value>
+  </data>
+  <data name="Legs_Squats_Name" xml:space="preserve">
+    <value>Squats</value>
+  </data>
+  <data name="Shoulders_FrontRaises_Description" xml:space="preserve">
+    <value>Lift dumbbells in front of you to work the anterior deltoids.</value>
+  </data>
+  <data name="Shoulders_FrontRaises_Name" xml:space="preserve">
+    <value>Front Raises</value>
+  </data>
+  <data name="Shoulders_LateralRaises_Description" xml:space="preserve">
+    <value>Lift dumbbells to the sides to work the lateral deltoid.</value>
+  </data>
+  <data name="Shoulders_LateralRaises_Name" xml:space="preserve">
+    <value>Lateral Raises</value>
+  </data>
+  <data name="Shoulders_ShoulderPress_Description" xml:space="preserve">
+    <value>Using a barbell or dumbbells, push the weight above your head from your shoulders.</value>
+  </data>
+  <data name="Shoulders_ShoulderPress_Name" xml:space="preserve">
+    <value>Shoulder Press</value>
   </data>
 </root>

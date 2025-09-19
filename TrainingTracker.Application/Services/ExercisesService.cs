@@ -84,11 +84,17 @@ namespace TrainingTracker.Application.Services
             return existingExercise != null && existingExercise.MuscleGroup == muscleGroup;
         }
 
-        public Task<Exercise> GetByName(string name)
+        public async Task<Exercise> GetByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException(_localizer["ExerciseEmptyName"], nameof(name));
-            return _exercisesRepository.GetByName(name);
+            var exercise = await _exercisesRepository.GetByName(name);
+            if(exercise != null)
+            {
+                exercise.Name = _localizer[exercise.Name];
+                exercise.Description = _localizer[exercise.Description];
+            }
+            return exercise;
         }
 
         public async Task<ExercisesConnection> GetExercisesAsync(int? muscleGroup = null, string? search = null, int? first = null, int? last = null, string? after = null, string? before = null)
@@ -101,8 +107,10 @@ namespace TrainingTracker.Application.Services
                 query = query.Where(e => e.MuscleGroup == (MuscleGroup)muscleGroup);
 
             if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(e => e.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
-                                      || e.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(e =>
+                    (_localizer[e.Name].Value.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                    (_localizer[e.Description].Value.Contains(search, StringComparison.OrdinalIgnoreCase))
+                );
 
             int totalCount = query.Count();
 
@@ -135,8 +143,8 @@ namespace TrainingTracker.Application.Services
                     .Select(ex => new ExerciseGraphQLDto
                     {
                         Id = ex.Id,
-                        Name = ex.Name,
-                        Description = ex.Description,
+                        Name = _localizer[ex.Name],
+                        Description = _localizer[ex.Description],
                         MuscleGroup = (int)ex.MuscleGroup,
                         MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
                     })
@@ -151,8 +159,8 @@ namespace TrainingTracker.Application.Services
                     .Select(ex => new ExerciseGraphQLDto
                     {
                         Id = ex.Id,
-                        Name = ex.Name,
-                        Description = ex.Description,
+                        Name = _localizer[ex.Name],
+                        Description = _localizer[ex.Description],
                         MuscleGroup = (int)ex.MuscleGroup,
                         MuscleGroupName = Enum.GetName(typeof(MuscleGroup), ex.MuscleGroup) ?? string.Empty
                     })

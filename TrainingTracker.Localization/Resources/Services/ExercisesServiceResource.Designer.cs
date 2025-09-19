@@ -19,7 +19,7 @@ namespace TrainingTracker.Localization.Resources.Services {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ExercisesServiceResource {
@@ -61,6 +61,330 @@ namespace TrainingTracker.Localization.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elbow flexion with a barbell from the waist to the chest..
+        /// </summary>
+        public static string Arms_BarbellCurl_Description {
+            get {
+                return ResourceManager.GetString("Arms_BarbellCurl_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Barbell Curl.
+        /// </summary>
+        public static string Arms_BarbellCurl_Name {
+            get {
+                return ResourceManager.GetString("Arms_BarbellCurl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performed while seated, with the elbow resting on the leg for a more controlled movement..
+        /// </summary>
+        public static string Arms_ConcentrationCurl_Description {
+            get {
+                return ResourceManager.GetString("Arms_ConcentrationCurl_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Concentration Curl.
+        /// </summary>
+        public static string Arms_ConcentrationCurl_Name {
+            get {
+                return ResourceManager.GetString("Arms_ConcentrationCurl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With dumbbells held vertically, flex the arms..
+        /// </summary>
+        public static string Arms_HammerCurl_Description {
+            get {
+                return ResourceManager.GetString("Arms_HammerCurl_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hammer Curl.
+        /// </summary>
+        public static string Arms_HammerCurl_Name {
+            get {
+                return ResourceManager.GetString("Arms_HammerCurl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With a dumbbell or bar behind your head, extend your elbows upward..
+        /// </summary>
+        public static string Arms_OverheadTricepsExtension_Description {
+            get {
+                return ResourceManager.GetString("Arms_OverheadTricepsExtension_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overhead Triceps Extension.
+        /// </summary>
+        public static string Arms_OverheadTricepsExtension_Name {
+            get {
+                return ResourceManager.GetString("Arms_OverheadTricepsExtension_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lower your body between two bars or with the support of a bench, using your triceps..
+        /// </summary>
+        public static string Arms_TricepDips_Description {
+            get {
+                return ResourceManager.GetString("Arms_TricepDips_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tricep Dips.
+        /// </summary>
+        public static string Arms_TricepDips_Name {
+            get {
+                return ResourceManager.GetString("Arms_TricepDips_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With a high pulley and rope or bar, push down by extending your elbows..
+        /// </summary>
+        public static string Arms_TricepsPushdown_Description {
+            get {
+                return ResourceManager.GetString("Arms_TricepsPushdown_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Triceps Pushdown.
+        /// </summary>
+        public static string Arms_TricepsPushdown_Name {
+            get {
+                return ResourceManager.GetString("Arms_TricepsPushdown_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row a barbell toward your abdomen with your torso inclined, working your middle and lower back..
+        /// </summary>
+        public static string Back_BarbellRow_Description {
+            get {
+                return ResourceManager.GetString("Back_BarbellRow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Barbell Row.
+        /// </summary>
+        public static string Back_BarbellRow_Name {
+            get {
+                return ResourceManager.GetString("Back_BarbellRow_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pull a bar from above to your chest, ideal for your back muscles if you can&apos;t do pull-ups..
+        /// </summary>
+        public static string Back_LatPulldown_Description {
+            get {
+                return ResourceManager.GetString("Back_LatPulldown_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lat Pulldown.
+        /// </summary>
+        public static string Back_LatPulldown_Name {
+            get {
+                return ResourceManager.GetString("Back_LatPulldown_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hang from a bar and lift your body with your arms, activating your back muscles, biceps, and trapezius muscles..
+        /// </summary>
+        public static string Back_PullUps_Description {
+            get {
+                return ResourceManager.GetString("Back_PullUps_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pull-Ups.
+        /// </summary>
+        public static string Back_PullUps_Name {
+            get {
+                return ResourceManager.GetString("Back_PullUps_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sitting down, pull a pulley with both hands toward your abdomen..
+        /// </summary>
+        public static string Back_SeatedCableRow_Description {
+            get {
+                return ResourceManager.GetString("Back_SeatedCableRow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seated Cable Row.
+        /// </summary>
+        public static string Back_SeatedCableRow_Name {
+            get {
+                return ResourceManager.GetString("Back_SeatedCableRow_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A compound exercise where you push a weighted barbell upward from your chest, working your pectorals, triceps, and shoulders..
+        /// </summary>
+        public static string Chest_BenchPress_Description {
+            get {
+                return ResourceManager.GetString("Chest_BenchPress_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bench Press.
+        /// </summary>
+        public static string Chest_BenchPress_Name {
+            get {
+                return ResourceManager.GetString("Chest_BenchPress_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using dumbbells or a machine, you open and close your arms as if hugging a tree, focusing on the pectorals..
+        /// </summary>
+        public static string Chest_ChestFly_Description {
+            get {
+                return ResourceManager.GetString("Chest_ChestFly_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chest Fly.
+        /// </summary>
+        public static string Chest_ChestFly_Name {
+            get {
+                return ResourceManager.GetString("Chest_ChestFly_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Similar to the bench press, but on an incline bench to emphasize the upper chest..
+        /// </summary>
+        public static string Chest_InclineDumbbellPress_Description {
+            get {
+                return ResourceManager.GetString("Chest_InclineDumbbellPress_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incline Dumbbell Press.
+        /// </summary>
+        public static string Chest_InclineDumbbellPress_Name {
+            get {
+                return ResourceManager.GetString("Chest_InclineDumbbellPress_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using your body weight, you lower and raise your torso from the floor, activating your chest, triceps, and core..
+        /// </summary>
+        public static string Chest_PushUp_Description {
+            get {
+                return ResourceManager.GetString("Chest_PushUp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Push Up.
+        /// </summary>
+        public static string Chest_PushUp_Name {
+            get {
+                return ResourceManager.GetString("Chest_PushUp_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partial elevation of the torso from the floor..
+        /// </summary>
+        public static string Core_Crunches_Description {
+            get {
+                return ResourceManager.GetString("Core_Crunches_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crunches.
+        /// </summary>
+        public static string Core_Crunches_Name {
+            get {
+                return ResourceManager.GetString("Core_Crunches_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controlled elevation of the legs while lying down to work the lower abdominals..
+        /// </summary>
+        public static string Core_LegRaises_Description {
+            get {
+                return ResourceManager.GetString("Core_LegRaises_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leg Raises.
+        /// </summary>
+        public static string Core_LegRaises_Name {
+            get {
+                return ResourceManager.GetString("Core_LegRaises_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static position supported on elbows and feet, activates the entire core..
+        /// </summary>
+        public static string Core_Plank_Description {
+            get {
+                return ResourceManager.GetString("Core_Plank_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plank.
+        /// </summary>
+        public static string Core_Plank_Name {
+            get {
+                return ResourceManager.GetString("Core_Plank_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sitting on the floor, rotate the torso from side to side with or without weight..
+        /// </summary>
+        public static string Core_RussianTwists_Description {
+            get {
+                return ResourceManager.GetString("Core_RussianTwists_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Russian Twists.
+        /// </summary>
+        public static string Core_RussianTwists_Name {
+            get {
+                return ResourceManager.GetString("Core_RussianTwists_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The exercise name cannot be null or empty..
         /// </summary>
         public static string ExerciseEmptyName {
@@ -75,6 +399,132 @@ namespace TrainingTracker.Localization.Resources.Services {
         public static string ExerciseUniqueNameMuscleGroupValidation {
             get {
                 return ResourceManager.GetString("ExerciseUniqueNameMuscleGroupValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On a machine, bend your legs toward your glutes to work your hamstrings..
+        /// </summary>
+        public static string Legs_LegCurl_Description {
+            get {
+                return ResourceManager.GetString("Legs_LegCurl_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leg Curl.
+        /// </summary>
+        public static string Legs_LegCurl_Name {
+            get {
+                return ResourceManager.GetString("Legs_LegCurl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On a machine, platforms are pushed with the legs against resistance..
+        /// </summary>
+        public static string Legs_LegPress_Description {
+            get {
+                return ResourceManager.GetString("Legs_LegPress_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leg Press.
+        /// </summary>
+        public static string Legs_LegPress_Name {
+            get {
+                return ResourceManager.GetString("Legs_LegPress_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take a long step forward or backward, lowering your knee, working your quadriceps, glutes, and stability..
+        /// </summary>
+        public static string Legs_Lunges_Description {
+            get {
+                return ResourceManager.GetString("Legs_Lunges_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lunges.
+        /// </summary>
+        public static string Legs_Lunges_Name {
+            get {
+                return ResourceManager.GetString("Legs_Lunges_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controlled lowering of the body from a standing position to a squatting position, working the quadriceps, glutes, and core..
+        /// </summary>
+        public static string Legs_Squats_Description {
+            get {
+                return ResourceManager.GetString("Legs_Squats_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Squats.
+        /// </summary>
+        public static string Legs_Squats_Name {
+            get {
+                return ResourceManager.GetString("Legs_Squats_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lift dumbbells in front of you to work the anterior deltoids..
+        /// </summary>
+        public static string Shoulders_FrontRaises_Description {
+            get {
+                return ResourceManager.GetString("Shoulders_FrontRaises_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Front Raises.
+        /// </summary>
+        public static string Shoulders_FrontRaises_Name {
+            get {
+                return ResourceManager.GetString("Shoulders_FrontRaises_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lift dumbbells to the sides to work the lateral deltoid..
+        /// </summary>
+        public static string Shoulders_LateralRaises_Description {
+            get {
+                return ResourceManager.GetString("Shoulders_LateralRaises_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lateral Raises.
+        /// </summary>
+        public static string Shoulders_LateralRaises_Name {
+            get {
+                return ResourceManager.GetString("Shoulders_LateralRaises_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using a barbell or dumbbells, push the weight above your head from your shoulders..
+        /// </summary>
+        public static string Shoulders_ShoulderPress_Description {
+            get {
+                return ResourceManager.GetString("Shoulders_ShoulderPress_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shoulder Press.
+        /// </summary>
+        public static string Shoulders_ShoulderPress_Name {
+            get {
+                return ResourceManager.GetString("Shoulders_ShoulderPress_Name", resourceCulture);
             }
         }
     }

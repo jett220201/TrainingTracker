@@ -117,10 +117,160 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ExerciseUniqueNameMuscleGroupValidation" xml:space="preserve">
-    <value>Un ejercicio con el mismo nombre {0} y grupo de musculo {1} ya existe.</value>
+  <data name="Arms_BarbellCurl_Description" xml:space="preserve">
+    <value>Flexión de codo con barra desde la cintura hasta el pecho.</value>
+  </data>
+  <data name="Arms_BarbellCurl_Name" xml:space="preserve">
+    <value>Curl con barra</value>
+  </data>
+  <data name="Arms_ConcentrationCurl_Description" xml:space="preserve">
+    <value>Se realiza sentado, con el codo apoyado en la pierna para un movimiento más controlado.</value>
+  </data>
+  <data name="Arms_ConcentrationCurl_Name" xml:space="preserve">
+    <value>Curl de concentración</value>
+  </data>
+  <data name="Arms_HammerCurl_Description" xml:space="preserve">
+    <value>Con las mancuernas en posición vertical, flexiona los brazos.</value>
+  </data>
+  <data name="Arms_HammerCurl_Name" xml:space="preserve">
+    <value>Curl con mancuernas</value>
+  </data>
+  <data name="Arms_OverheadTricepsExtension_Description" xml:space="preserve">
+    <value>Con una mancuerna o barra detrás de la cabeza, extiende los codos hacia arriba.</value>
+  </data>
+  <data name="Arms_OverheadTricepsExtension_Name" xml:space="preserve">
+    <value>Extensión de tríceps por encima de la cabeza</value>
+  </data>
+  <data name="Arms_TricepDips_Description" xml:space="preserve">
+    <value>Baja el cuerpo entre dos barras o con el apoyo de un banco, utilizando los tríceps.</value>
+  </data>
+  <data name="Arms_TricepDips_Name" xml:space="preserve">
+    <value>Fondos de tríceps</value>
+  </data>
+  <data name="Arms_TricepsPushdown_Description" xml:space="preserve">
+    <value>Con una polea alta y una cuerda o barra, empuja hacia abajo extendiendo los codos.</value>
+  </data>
+  <data name="Arms_TricepsPushdown_Name" xml:space="preserve">
+    <value>Extensión de tríceps</value>
+  </data>
+  <data name="Back_BarbellRow_Description" xml:space="preserve">
+    <value>Remar con una barra hacia el abdomen con el torso inclinado, trabajando la parte media y baja de la espalda.</value>
+  </data>
+  <data name="Back_BarbellRow_Name" xml:space="preserve">
+    <value>Remo con barra</value>
+  </data>
+  <data name="Back_LatPulldown_Description" xml:space="preserve">
+    <value>Tira de una barra desde arriba hacia tu pecho, ideal para los músculos de la espalda si no puedes hacer dominadas.</value>
+  </data>
+  <data name="Back_LatPulldown_Name" xml:space="preserve">
+    <value>Tirón lateral</value>
+  </data>
+  <data name="Back_PullUps_Description" xml:space="preserve">
+    <value>Cuélgate de una barra y levanta tu cuerpo con los brazos, activando los músculos de la espalda, los bíceps y los trapecios.</value>
+  </data>
+  <data name="Back_PullUps_Name" xml:space="preserve">
+    <value>Dominadas</value>
+  </data>
+  <data name="Back_SeatedCableRow_Description" xml:space="preserve">
+    <value>Sentado, tira de una polea con ambas manos hacia tu abdomen.</value>
+  </data>
+  <data name="Back_SeatedCableRow_Name" xml:space="preserve">
+    <value>Remo sentado con cable</value>
+  </data>
+  <data name="Chest_BenchPress_Description" xml:space="preserve">
+    <value>Ejercicio compuesto en el que se empuja una barra con peso hacia arriba desde el pecho, trabajando los pectorales, tríceps y hombros.</value>
+  </data>
+  <data name="Chest_BenchPress_Name" xml:space="preserve">
+    <value>Press de banca</value>
+  </data>
+  <data name="Chest_ChestFly_Name" xml:space="preserve">
+    <value>Aperturas de pecho</value>
+  </data>
+  <data name="Chest_ChestFly_Description" xml:space="preserve">
+    <value>Con mancuernas o una máquina, se abren y cierran los brazos como si se abrazara un árbol, centrándose en los pectorales.</value>
+  </data>
+  <data name="Chest_InclineDumbbellPress_Description" xml:space="preserve">
+    <value>Similar al press de banca, pero en un banco inclinado para enfatizar la parte superior del pecho.</value>
+  </data>
+  <data name="Chest_InclineDumbbellPress_Name" xml:space="preserve">
+    <value>Press inclinado con mancuernas</value>
+  </data>
+  <data name="Chest_PushUp_Description" xml:space="preserve">
+    <value>Utilizando el peso de tu cuerpo, bajas y subes el torso desde el suelo, activando el pecho, los tríceps y el tronco.</value>
+  </data>
+  <data name="Chest_PushUp_Name" xml:space="preserve">
+    <value>Flexiones</value>
+  </data>
+  <data name="Core_Crunches_Description" xml:space="preserve">
+    <value>Elevación parcial del torso desde el suelo.</value>
+  </data>
+  <data name="Core_Crunches_Name" xml:space="preserve">
+    <value>Abdominales</value>
+  </data>
+  <data name="Core_LegRaises_Description" xml:space="preserve">
+    <value>Elevación controlada de las piernas mientras se está acostado para trabajar los abdominales inferiores.</value>
+  </data>
+  <data name="Core_LegRaises_Name" xml:space="preserve">
+    <value>Elevaciones de piernas</value>
+  </data>
+  <data name="Core_Plank_Description" xml:space="preserve">
+    <value>Posición estática apoyada sobre los codos y los pies, activa todo el tronco.</value>
+  </data>
+  <data name="Core_Plank_Name" xml:space="preserve">
+    <value>Plancha</value>
+  </data>
+  <data name="Core_RussianTwists_Description" xml:space="preserve">
+    <value>Sentado en el suelo, gira el torso de lado a lado con o sin peso.</value>
+  </data>
+  <data name="Core_RussianTwists_Name" xml:space="preserve">
+    <value>Giros rusos</value>
   </data>
   <data name="ExerciseEmptyName" xml:space="preserve">
     <value>El nombre del ejercicio no puede ser nulo o vacío.</value>
+  </data>
+  <data name="ExerciseUniqueNameMuscleGroupValidation" xml:space="preserve">
+    <value>Un ejercicio con el mismo nombre {0} y grupo de musculo {1} ya existe.</value>
+  </data>
+  <data name="Legs_LegCurl_Description" xml:space="preserve">
+    <value>En una máquina, flexiona las piernas hacia los glúteos para trabajar los isquiotibiales.</value>
+  </data>
+  <data name="Legs_LegCurl_Name" xml:space="preserve">
+    <value>Flexión de piernas</value>
+  </data>
+  <data name="Legs_LegPress_Description" xml:space="preserve">
+    <value>En una máquina, se empujan las plataformas con las piernas contra la resistencia.</value>
+  </data>
+  <data name="Legs_LegPress_Name" xml:space="preserve">
+    <value>Prensa de piernas</value>
+  </data>
+  <data name="Legs_Lunges_Description" xml:space="preserve">
+    <value>Da un paso largo hacia delante o hacia atrás, bajando la rodilla, trabajando los cuádriceps, los glúteos y la estabilidad.</value>
+  </data>
+  <data name="Legs_Lunges_Name" xml:space="preserve">
+    <value>Zancadas</value>
+  </data>
+  <data name="Legs_Squats_Description" xml:space="preserve">
+    <value>Descenso controlado del cuerpo desde una posición de pie a una posición en cuclillas, trabajando los cuádriceps, los glúteos y el tronco.</value>
+  </data>
+  <data name="Legs_Squats_Name" xml:space="preserve">
+    <value>Sentadillas</value>
+  </data>
+  <data name="Shoulders_FrontRaises_Description" xml:space="preserve">
+    <value>Levanta las mancuernas delante de ti para trabajar los deltoides anteriores.</value>
+  </data>
+  <data name="Shoulders_FrontRaises_Name" xml:space="preserve">
+    <value>Elevaciones frontales</value>
+  </data>
+  <data name="Shoulders_LateralRaises_Description" xml:space="preserve">
+    <value>Levanta las mancuernas hacia los lados para trabajar el deltoides lateral.</value>
+  </data>
+  <data name="Shoulders_LateralRaises_Name" xml:space="preserve">
+    <value>Elevaciones laterales</value>
+  </data>
+  <data name="Shoulders_ShoulderPress_Description" xml:space="preserve">
+    <value>Con una barra o mancuernas, empuja el peso por encima de la cabeza desde los hombros.</value>
+  </data>
+  <data name="Shoulders_ShoulderPress_Name" xml:space="preserve">
+    <value>Press de hombros</value>
   </data>
 </root>
