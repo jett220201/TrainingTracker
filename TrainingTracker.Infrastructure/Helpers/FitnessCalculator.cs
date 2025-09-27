@@ -17,7 +17,14 @@ namespace TrainingTracker.Infrastructure.Helpers
         public decimal CalculateProgressPercent(decimal currentValue, decimal goalValue)
         {
             if (goalValue == 0) return 0;
-            return Math.Min(100, (currentValue / goalValue) * 100);
+            if(currentValue > goalValue)
+            {
+                return (goalValue / currentValue) *100;
+            }
+            else
+            {
+                return (currentValue / goalValue) * 100;
+            }
         }
     }
 }
