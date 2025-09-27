@@ -102,6 +102,7 @@ namespace TrainingTracker.Application.Services
                 UserGoals = userGoals
                     .Select(g => new UserGoalGraphQLDto
                     {
+                        Id = g.Id,
                         Description = g.Description,
                         TargetValue = g.TargetValue,
                         CurrentValue = GetCurrentGoalValue(g, lastProgress),

@@ -4,6 +4,7 @@ namespace TrainingTracker.Application.DTOs.GraphQL.Entities.UserGoal
 {
     public class UserGoalGraphQLDto
     {
+        public int Id { get; set; }
         public string Description { get; set; } = string.Empty;
         public decimal TargetValue { get; set; }
         public decimal CurrentValue { get; set; }
