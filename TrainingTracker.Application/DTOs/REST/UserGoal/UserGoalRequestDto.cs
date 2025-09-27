@@ -38,9 +38,9 @@ public class FutureDateAttribute : ValidationAttribute
 {
     public override bool IsValid(object value)
     {
-        if (value is DateTime fecha)
+        if (value is DateOnly fecha)
         {
-            return fecha.Date > DateTime.Today;
+            return fecha > DateOnly.FromDateTime(DateTime.Now);
         }
         return false;
     }
