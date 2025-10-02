@@ -20,11 +20,12 @@ namespace TrainingTracker.Application.Services
         private readonly IExercisesService _exercisesService;
         private readonly IUserService _usersService;
         private readonly IStringLocalizer<WorkoutsServiceResource> _workoutLocalizer;
+        private readonly IStringLocalizer<ExercisesServiceResource> _exerciseLocalizer;
         private readonly IStringLocalizer<SharedResources> _sharedLocalizer;
 
         public WorkoutsService(IWorkoutsRepository workoutsRepository, IWorkoutExercisesAssociationsService workoutExercisesAssociationsService, 
             IExercisesService exercisesService, IUserService usersService, IStringLocalizer<WorkoutsServiceResource> workoutLocalizer,
-            IStringLocalizer<SharedResources> sharedLocalizer)
+            IStringLocalizer<SharedResources> sharedLocalizer, IStringLocalizer<ExercisesServiceResource> exerciseLocalizer)
         {
             _workoutsRepository = workoutsRepository ?? throw new ArgumentNullException(nameof(workoutsRepository));
             _workoutExercisesAssociationsService = workoutExercisesAssociationsService ?? throw new ArgumentNullException(nameof(workoutExercisesAssociationsService));
@@ -32,6 +33,7 @@ namespace TrainingTracker.Application.Services
             _usersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
             _workoutLocalizer = workoutLocalizer ?? throw new ArgumentNullException(nameof(workoutLocalizer));
             _sharedLocalizer = sharedLocalizer ?? throw new ArgumentNullException(nameof(sharedLocalizer));
+            _exerciseLocalizer = exerciseLocalizer ?? throw new ArgumentNullException(nameof(exerciseLocalizer));
         }
 
         public Task Add(Workout entity)
@@ -125,11 +127,12 @@ namespace TrainingTracker.Application.Services
                     Sets = we.Sets,
                     Repetitions = we.Repetitions,
                     Weight = we.Weight,
+                    RestTime = we.RestTime,
                     Exercise = new ExerciseGraphQLDto
                     {
                         Id = we.Exercise.Id,
-                        Name = we.Exercise.Name,
-                        Description = we.Exercise.Description,
+                        Name = _exerciseLocalizer[we.Exercise.Name],
+                        Description = _exerciseLocalizer[we.Exercise.Description],
                         MuscleGroup = (int)we.Exercise.MuscleGroup,
                         MuscleGroupName = Enum.GetName(typeof(MuscleGroup), we.Exercise.MuscleGroup) ?? string.Empty
                     }
