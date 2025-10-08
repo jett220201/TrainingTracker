@@ -38,9 +38,6 @@ namespace TrainingTracker.Infrastructure.Repository
         public async Task Delete(TEntity entity)
         {
             var contextFactory = await _contextFactory.CreateDbContextAsync();
-            var existingEntity = await contextFactory.Set<TEntity>().FindAsync(entity);
-
-            if (existingEntity == null) return;
 
             contextFactory.Set<TEntity>().Remove(entity);
             await contextFactory.SaveChangesAsync();
