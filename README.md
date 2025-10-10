@@ -12,10 +12,6 @@ API for managing user routines and progress, developed with .NET.
 - **Banana Cake POP for documentation (GraphQL)** 📙
 - **SendGrid for messaging** 📨
 
-## 📥 Getting Started
-These instructions will give you a give to install and run the
-project in your local machine.
-
 ### 📂 Project structure
 This project has the following structure:
 ```
@@ -85,9 +81,11 @@ This project has the following structure:
  ┃ ┃ ┃ ┃ ┣ 📜LogoutRequestDto.cs
  ┃ ┃ ┃ ┃ ┗ 📜RefreshTokenRequestDto.cs
  ┃ ┃ ┃ ┣ 📂User
+ ┃ ┃ ┃ ┃ ┣ 📜UserBasicResponseDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserChangeLanguageRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserChangePasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserDeleteAccountRequestDto.cs
+ ┃ ┃ ┃ ┃ ┣ 📜UserEditRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserRecoverPasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┣ 📜UserRecoveryPasswordRequestDto.cs
  ┃ ┃ ┃ ┃ ┗ 📜UserRegistrationRequestDto.cs
@@ -153,6 +151,7 @@ This project has the following structure:
  ┃ ┗ 📜TrainingTracker.Domain.csproj
  ┣ 📂TrainingTracker.Infrastructure
  ┃ ┣ 📂Helpers
+ ┃ ┃ ┣ 📜FitnessCalculator.cs
  ┃ ┃ ┣ 📜SecurityHelper.cs
  ┃ ┃ ┗ 📜SendGridEmailHelper.cs
  ┃ ┣ 📂Migrations
@@ -255,23 +254,25 @@ This separation improves the modularity, maintainability and testability of the 
 
 | Method  | Endpoint               | Controller         | Description               | Parameters       | Expected Response |
 |---------|------------------------|--------------------|---------------------------|------------------|-------------------|
-| `POST`  | `/api/auth/login`      | `AuthController`  | Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes. | Username and Password | JWT token and Refresh token |
+| `POST`  | `/api/auth/login`      | `AuthController`  | Authenticates the user with username and password, returns a JWT access token and refresh token. Locks the user after 3 failed attempts for 15 minutes. | Username and password | JWT token and Refresh token |
 | `POST`  | `/api/auth/refresh`    | `AuthController`  | Refresh the JWT token using a valid refresh token. | Refresh token | JWT token and Refresh token |
+| `POST`  | `/api/auth/me`    | `AuthController`  | Retrieve details of the currently authenticated user. | User ID (get by claims in JWT) | User's full name, gender and preferred language |
 | `POST`  | `/api/auth/logout`     | `AuthController`  | Revoke the refresh token to log out the user  | Refresh token | Success message |
 | `POST`  | `/api/auth/lang-change`     | `AuthController`  | Change the preferred language of the authenticated user  | Preferred language short name | JWT token and Refresh token |
 | `POST`  | `/api/exercises/add`   | `ExercisesController` | Add a new exercise to the system  | Name, Description and muscle group | Success message |
-| `POST`  | `/api/user/register`   | `UserController`  | Register a new user in the application | Username, name, last name, email, password, gender, height, date of birth and preferred language | Success message |
+| `POST`  | `/api/user/register`   | `UserController`  | Register a new user in the application | Username, name, last name, email, password, gender, height, date of birth and preferred language | Success message|
+| `POST`  | `/api/user/edit`   | `UserController`  | Edit user info | Name, last name, gender, height | Success message|
 | `POST`  | `/api/user/change-password` | `UserController`  | Change the password of the authenticated user  | Username, current password and new passsword | Success message |
 | `POST`  | `/api/user/change-password-recovery` | `UserController` | Change the password using a recovery token  | Recovery token and new password | Success message |
 | `POST`  | `/api/user/recover-password`  | `UserController` | Send a password recovery email to the user | Email | Success message |
 | `POST`  | `/api/user/delete`     | `UserController` | Delete the authenticated user's account   | Email and password | Success message |
 | `POST`  | `/api/usergoal/add`     | `UserGoalController` | Add a new registry with details of the user goal   | Description, target value, type, direction and goal date | Success message |
-| `POST`  | `/api/usergoal/delete`     | `UserGoalController` | Delete a user goal by its ID   | Goal ID | Success message |
-| `POST`  | `/api/usergoal/edit`     | `UserGoalController` | Edit an existing user goal   | Description, target value, type, direction and goal date | Success message |
-| `POST`  | `/api/userprogress/add` | `UserProgressController` | Add a new registry with details of the user progress | User ID, Body fat percentage, user's weight | Success message |
-| `POST`  | `/api/workouts/add`    | `WorkoutsController` | Add a new workout to the system | User ID, name, list of exercises with # repetitions, #sets, weight, exercise ID and time of rest | Success message |
+| `POST`  | `/api/usergoal/delete`     | `UserGoalController` | Delete a user goal by its ID  | Goal ID | Success message |
+| `POST`  | `/api/usergoal/edit`     | `UserGoalController` | Edit an existing user goal | Description, target value, type, direction and goal date | Success message |
+| `POST`  | `/api/userprogress/add` | `UserProgressController` | Add a new registry with details of the user progress | Body fat percentage, user's weight | Success message |
+| `POST`  | `/api/workouts/add`    | `WorkoutsController` | Add a new workout to the system | Name, list of exercises with # repetitions, #sets, weight, exercise ID and time of rest | Success message |
 | `POST`  | `/api/workouts/delete`    | `WorkoutsController` | Delete a workout by its ID | Workout ID | Success message |
-| `POST`  | `/api/workouts/edit`    | `WorkoutsController` | Edit an existing workout | User ID, name, list of exercises with # repetitions, #sets, weight, exercise ID and time of rest | Success message |
+| `POST`  | `/api/workouts/edit`    | `WorkoutsController` | Edit an existing workout | Workout ID, name, list of exercises with # repetitions, # sets, weight, exercise ID and time of rest | Success message |
 
 **GraphQL**
 | Type     | Name                 | Arguments       | Description                          |
@@ -280,7 +281,7 @@ This separation improves the modularity, maintainability and testability of the 
 | `Query`  | `userProgressByUser` | `none`*         | Returns the user's progress history. |
 | `Query`  | `workoutsByUser`     | `search: String [nullable]`* | Returns the list of user's workouts. |
 | `Query`  | `userInfo`           | `none`*         | Returns the basic info for home view. |
-| `Query`  | `exercises`          | `muscleGroup: Int [nullable], search: String [nullable], first: Int [nullable], after: String [nullable]`         | Returns the list of exercises that match the search arguments. |
+| `Query`  | `exercises`          | `muscleGroup: Int [nullable], search: String [nullable], first: Int [nullable], last: Int [nullable], after: String [nullable], before: String [nullable]`| Returns the list of exercises that match the search arguments. |
 | `Query`  | `goalsByUser`        | `search: String [nullable]`*         | Returns the list of goals by user that match the search argument. |
 
 > [!NOTE]
@@ -291,9 +292,10 @@ The following diagram explain how the database is defined:
 ![Database Diagram](db_diagram.png)
 
 ## 🧠 Future features
-- Develop a modern frontend that displays platform information
-- Develop periodic tasks that clean data from the database
 - Deploy the platform!
+
+## 💻📲 Frontend project: 
+https://github.com/jett220201/TrainingTracker-Frontend
 
 ## :octocat: Authors
   - **Juan Esteban Torres Tamayo**
