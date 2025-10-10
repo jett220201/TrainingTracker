@@ -12,6 +12,8 @@ API for managing user routines and progress, developed with .NET.
 - **Banana Cake POP for documentation (GraphQL)** 📙
 - **SendGrid for messaging** 📨
 
+[![My Skills](https://skillicons.dev/icons?i=visualstudio,dotnet,cs,graphql)](https://skillicons.dev)
+
 ### 📂 Project structure
 This project has the following structure:
 ```
