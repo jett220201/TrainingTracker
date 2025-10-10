@@ -294,7 +294,7 @@ The following diagram explain how the database is defined:
 ## 🧠 Future features
 - Deploy the platform!
 
-## 💻📲 Frontend project: 
+## 💻📲 Frontend project
 https://github.com/jett220201/TrainingTracker-Frontend
 
 ## :octocat: Authors
