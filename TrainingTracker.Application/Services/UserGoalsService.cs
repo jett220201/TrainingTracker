@@ -133,7 +133,8 @@ namespace TrainingTracker.Application.Services
             {
                 throw new ArgumentException(_localizer["UserGoalNotFound"]);
             }
-            if (await _userService.GetById((int)userGoalRequest.UserId) == null)
+            var user = await _userService.GetById((int)userGoalRequest.UserId);
+            if (user == null)
             {
                 throw new ValidationException(_localizer["UserNotFound"]);
             }
@@ -143,6 +144,23 @@ namespace TrainingTracker.Application.Services
             userGoalToEdit.GoalType = (GoalType)userGoalRequest.GoalType;
             userGoalToEdit.GoalDirection = (GoalDirection)userGoalRequest.GoalDirection;
             userGoalToEdit.GoalDate = userGoalRequest.GoalDate;
+
+            var lastProgress = user.UserProgresses.OrderBy(x => x.CreatedAt).LastOrDefault();
+            var currentValue = GetCurrentGoalValue(userGoalToEdit, lastProgress);
+
+            if((GoalDirection)userGoalRequest.GoalDirection == GoalDirection.Increase)
+            {
+                userGoalToEdit.IsAchieved = currentValue >= userGoalRequest.TargetValue;
+            }
+            else if ((GoalDirection)userGoalRequest.GoalDirection == GoalDirection.Decrease)
+            {
+                userGoalToEdit.IsAchieved = currentValue <= userGoalRequest.TargetValue;
+            }
+            else
+            {
+                userGoalToEdit.IsAchieved = userGoalRequest.GoalDate >= DateOnly.FromDateTime(DateTime.UtcNow) && Math.Abs(currentValue - userGoalRequest.TargetValue) <= userGoalRequest.TargetValue * 0.02m;
+            }
+
             await _userGoalsRepository.Update(userGoalToEdit);
         }
 
